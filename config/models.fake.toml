@@ -1,0 +1,76 @@
+# LLM gateway configuration: model tiers per node, per-node budget caps, and prices.
+#
+# Model names are data. Before a real model is used it must be checked against the provider's
+# live model list (scripts/check_models.py, milestone 3); retired models fail that check
+# instead of failing in production.
+#
+# Offline configuration: the deterministic "fake" provider only. Used by tests, CI and the
+# offline demo. The real configuration is config/models.toml.
+
+[providers.fake]
+kind = "fake"
+
+[tiers.fast]    # routing: small, cheap, low latency
+primary = { provider = "fake", model = "fake-fast" }
+fallback = { provider = "fake", model = "fake-fast-backup" }
+max_output_tokens = 400
+timeout_s = 20.0
+
+[tiers.strong]  # workers: better reasoning and writing
+primary = { provider = "fake", model = "fake-strong" }
+fallback = { provider = "fake", model = "fake-strong-backup" }
+max_output_tokens = 2000
+timeout_s = 60.0
+
+[nodes.supervisor]
+tier = "fast"
+max_tokens_per_node = 6000
+max_usd_per_node = 0.01
+
+[nodes.researcher]
+tier = "strong"
+max_tokens_per_node = 30000
+max_usd_per_node = 0.10
+
+[nodes.coder]
+tier = "strong"
+max_tokens_per_node = 30000
+max_usd_per_node = 0.10
+
+[nodes.reviewer]
+tier = "strong"
+max_tokens_per_node = 20000
+max_usd_per_node = 0.06
+
+[nodes.single_agent]
+tier = "strong"
+max_tokens_per_node = 100000
+max_usd_per_node = 0.40
+
+# USD per million tokens. Fake prices are shaped like real small/large model prices so
+# budget behavior in tests looks realistic.
+[prices.fake-fast]
+input_per_mtok = 0.25
+output_per_mtok = 1.25
+
+[prices.fake-fast-backup]
+input_per_mtok = 0.30
+output_per_mtok = 1.50
+
+[prices.fake-strong]
+input_per_mtok = 3.00
+output_per_mtok = 15.00
+
+[prices.fake-strong-backup]
+input_per_mtok = 3.00
+output_per_mtok = 15.00
+
+[retry]
+max_retries = 4
+base_delay_s = 1.0
+max_delay_s = 20.0
+
+[nodes.judge]
+tier = "strong"
+max_tokens_per_node = 20000
+max_usd_per_node = 0.05

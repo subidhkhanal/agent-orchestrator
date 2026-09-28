@@ -1,0 +1,81 @@
+# LLM gateway configuration for real runs: model tiers per node, per-node caps, and prices.
+#
+# Model names are data, not code. `python scripts/check_models.py` compares every model here
+# with the provider's live model list, and workers run the same check at startup and refuse to
+# start if a configured model is gone (the failure mode that broke another project of mine).
+#
+# Verified on 2026-09-28 against GET https://api.groq.com/openai/v1/models.
+# Prices from https://console.groq.com/docs/models on the same date (USD per 1M tokens).
+#
+# Known limitation: primary and fallback are both on Groq, so the fallback covers a retired or
+# overloaded *model*, not a Groq-wide outage. A second provider is a config-only change: add a
+# [providers.x] block (any OpenAI-compatible API) and point a fallback route at it.
+
+# gpt-oss runs with reasoning_effort=low: far fewer hidden reasoning tokens, which matters
+# under free-tier per-request and per-day token limits.
+
+[providers.groq]
+kind = "openai_compatible"
+base_url = "https://api.groq.com/openai/v1"
+api_key_env = "GROQ_API_KEY"
+
+[tiers.fast]    # supervisor routing: small, cheap, low latency
+primary = { provider = "groq", model = "openai/gpt-oss-20b", params = { reasoning_effort = "low" } }
+fallback = { provider = "groq", model = "qwen/qwen3.8-27b" }
+max_output_tokens = 1200       # gpt-oss spends part of its output on hidden reasoning
+timeout_s = 30.0
+max_request_tokens = 7500   # free tier: 8,000 tokens per minute, enforced per request
+
+[tiers.strong]  # workers: research synthesis, writing, reviewing
+primary = { provider = "groq", model = "openai/gpt-oss-120b", params = { reasoning_effort = "low" } }
+fallback = { provider = "groq", model = "qwen/qwen3.8-27b" }
+max_output_tokens = 3000
+timeout_s = 90.0
+max_request_tokens = 7500
+
+[nodes.supervisor]
+tier = "fast"
+max_tokens_per_node = 8000
+max_usd_per_node = 0.005
+
+[nodes.researcher]
+tier = "strong"
+max_tokens_per_node = 40000
+max_usd_per_node = 0.03
+
+[nodes.coder]
+tier = "strong"
+max_tokens_per_node = 40000
+max_usd_per_node = 0.03
+
+[nodes.reviewer]
+tier = "strong"
+max_tokens_per_node = 30000
+max_usd_per_node = 0.02
+
+[nodes.single_agent]
+tier = "strong"
+max_tokens_per_node = 150000
+max_usd_per_node = 0.10
+
+[nodes.judge]            # eval harness only
+tier = "strong"
+max_tokens_per_node = 20000
+max_usd_per_node = 0.02
+
+[prices."openai/gpt-oss-20b"]
+input_per_mtok = 0.075
+output_per_mtok = 0.30
+
+[prices."openai/gpt-oss-120b"]
+input_per_mtok = 0.15
+output_per_mtok = 0.60
+
+[prices."qwen/qwen3.8-27b"]
+input_per_mtok = 0.80
+output_per_mtok = 4.00
+
+[retry]
+max_retries = 5
+base_delay_s = 2.0
+max_delay_s = 30.0
