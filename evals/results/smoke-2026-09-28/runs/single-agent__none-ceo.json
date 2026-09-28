@@ -1,0 +1,32 @@
+{
+ "task_id": "none-ceo",
+ "category": "impossible",
+ "system": "single-agent",
+ "status": "failed",
+ "termination": null,
+ "wall_s": 325.69,
+ "usd": 0.031933,
+ "tokens": 38564,
+ "budget_exceeded": false,
+ "llm_calls": 10,
+ "rate_limit_waits": 6,
+ "node_latencies": [],
+ "routes_valid": 0,
+ "routes_invalid": 0,
+ "guard_overrides": {},
+ "sources": 0,
+ "claims": 0,
+ "supported_claims": 0,
+ "citation_validity": null,
+ "facts_found": null,
+ "judge": {
+  "task_success": false,
+  "score": 1,
+  "unsupported_claims": 0,
+  "correct_abstention": false,
+  "rationale": "The response provided no memo, thus did not explicitly state that the information is unavailable, failing the unanswerable task requirement.",
+  "judge_usd": 0.000246
+ },
+ "memo": null,
+ "error": "AllProvidersFailed: groq/openai/gpt-oss-120b: RateLimitError('{\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01khvjpn71e6t8yqprb2qws07p` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 198852, Requested 7124. Please try again in 43m1.632s. Need more tokens? Upgrade to Dev Tier today at https://'); groq/qwen/qwen3.8-27b: ProviderError('HTTP 413: {\"error\":{\"message\":\"Request too large for model `qwen/qwen3.8-27b` in organization `org_01khvjpn71e6t8yqprb2qws07p` service tier `on_demand` on input tokens per minute (ITPM): Limit 7000, Requested 7803, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at h')"
+}

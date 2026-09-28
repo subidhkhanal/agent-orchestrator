@@ -1,0 +1,103 @@
+{
+ "task_id": "rag-parental",
+ "category": "rag",
+ "system": "research-memo",
+ "status": "completed",
+ "termination": "budget_exhausted",
+ "wall_s": 337.69,
+ "usd": 0.016434,
+ "tokens": 58814,
+ "budget_exceeded": false,
+ "llm_calls": 33,
+ "rate_limit_waits": 15,
+ "node_latencies": [
+  [
+   "supervisor",
+   2201
+  ],
+  [
+   "researcher",
+   18674
+  ],
+  [
+   "supervisor",
+   1058
+  ],
+  [
+   "coder",
+   2627
+  ],
+  [
+   "supervisor",
+   826
+  ],
+  [
+   "reviewer",
+   85439
+  ],
+  [
+   "supervisor",
+   6322
+  ],
+  [
+   "coder",
+   39391
+  ],
+  [
+   "supervisor",
+   894
+  ],
+  [
+   "reviewer",
+   95438
+  ],
+  [
+   "supervisor",
+   5810
+  ],
+  [
+   "coder",
+   49971
+  ],
+  [
+   "supervisor",
+   2701
+  ],
+  [
+   "coder",
+   19248
+  ],
+  [
+   "supervisor",
+   0
+  ],
+  [
+   "reviewer",
+   7058
+  ],
+  [
+   "supervisor",
+   0
+  ]
+ ],
+ "routes_valid": 7,
+ "routes_invalid": 0,
+ "guard_overrides": {
+  "budget_low": 2
+ },
+ "sources": 5,
+ "claims": 5,
+ "supported_claims": 4,
+ "citation_validity": 0.8,
+ "facts_found": true,
+ "judge": {
+  "task_success": true,
+  "score": 5,
+  "unsupported_claims": 0,
+  "correct_abstention": null,
+  "rationale": "The memo accurately reports the primary and secondary caregiver leave lengths and conditions, all directly supported by the cited source, with no extraneous or unsupported statements.",
+  "judge_usd": 0.000342
+ },
+ "memo": "## Overview\nNorthwind Labs provides paid parental leave benefits as outlined in its 2026 Benefits Guide [doc_94e09c6b]. This memo summarizes the leave entitlements for primary and secondary caregivers.\n\n## Paid Parental Leave\n### Primary Caregivers\nPrimary caregivers are eligible for **18 weeks of fully paid parental leave**. This leave must be taken **within 12 months of the birth, adoption, or placement** of the child [doc_94e09c6b].\n\n### Secondary Caregivers\nSecondary caregivers receive **8 weeks of fully paid parental leave**. Like primary caregivers, this leave must be taken **within 12 months of the birth, adoption, or placement** of the child [doc_94e09c6b].\n\n## Eligibility and Usage\n- Leave must be taken within 12 months of the birth, adoption, or placement of the child [doc_94e09c6b].\n\n## Open Questions\n- None identified based on the available source material.\n",
+ "error": null
+}

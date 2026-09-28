@@ -1,0 +1,75 @@
+{
+ "summary": {
+  "research-memo": {
+   "runs": 2,
+   "completed": 2,
+   "task_success_rate": 0.5,
+   "judge_mean_score": 3,
+   "citation_validity": 0.8,
+   "facts_found_rate": 1.0,
+   "avg_usd": 0.00911,
+   "avg_tokens": 35062,
+   "avg_wall_s": 200.4,
+   "p95_node_latency_s": {
+    "coder": 49.97,
+    "researcher": 54.7,
+    "reviewer": 95.44,
+    "supervisor": 6.32
+   },
+   "routing_validity": 1.0,
+   "guard_overrides": {
+    "budget_low": 2
+   },
+   "runs_over_budget": 0,
+   "rate_limit_waits": 16,
+   "per_category": {
+    "impossible": {
+     "runs": 1,
+     "success": 0
+    },
+    "rag": {
+     "runs": 1,
+     "success": 1
+    }
+   }
+  },
+  "single-agent": {
+   "runs": 2,
+   "completed": 1,
+   "task_success_rate": 0.0,
+   "judge_mean_score": 1.5,
+   "citation_validity": 0.143,
+   "facts_found_rate": 1.0,
+   "avg_usd": 0.0249,
+   "avg_tokens": 47986,
+   "avg_wall_s": 339.2,
+   "p95_node_latency_s": {
+    "single_agent": 352.75
+   },
+   "routing_validity": null,
+   "guard_overrides": {},
+   "runs_over_budget": 0,
+   "rate_limit_waits": 13,
+   "per_category": {
+    "impossible": {
+     "runs": 1,
+     "success": 0
+    },
+    "rag": {
+     "runs": 1,
+     "success": 0
+    }
+   }
+  }
+ },
+ "meta": {
+  "tasks": 2,
+  "skipped_no_web_search_key": [],
+  "budget": {
+   "tokens": 60000,
+   "usd": 0.05
+  },
+  "models_config": "config/models.toml",
+  "date": "2026-09-28"
+ }
+}

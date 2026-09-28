@@ -1,0 +1,37 @@
+{
+ "task_id": "rag-parental",
+ "category": "rag",
+ "system": "single-agent",
+ "status": "completed",
+ "termination": "budget_exhausted",
+ "wall_s": 352.77,
+ "usd": 0.017867,
+ "tokens": 57408,
+ "budget_exceeded": false,
+ "llm_calls": 15,
+ "rate_limit_waits": 7,
+ "node_latencies": [
+  [
+   "single_agent",
+   352750
+  ]
+ ],
+ "routes_valid": 0,
+ "routes_invalid": 0,
+ "guard_overrides": {},
+ "sources": 10,
+ "claims": 7,
+ "supported_claims": 1,
+ "citation_validity": 0.1429,
+ "facts_found": true,
+ "judge": {
+  "task_success": false,
+  "score": 2,
+  "unsupported_claims": 1,
+  "correct_abstention": null,
+  "rationale": "The memo accurately cites the 18\u2011week and 8\u2011week parental leave figures, but it adds an unsupported claim about eligibility that is not present in the cited source.",
+  "judge_usd": 0.000757
+ },
+ "memo": "## Northwind Labs Paid Parental Leave\n\n- **Primary caregivers** are entitled to **18 weeks** of fully paid parental leave.\n- **Secondary caregivers** are entitled to **8 weeks** of fully paid parental leave.\n- The leave must be taken within **12 months** of the birth, adoption, or placement of a child.\n\nThese provisions are described in the Northwind Labs Benefits Guide 2026 [doc_94e09c6b].\n\n## Eligibility\n\nThe Benefits Guide indicates that the parental\u2011leave benefits apply to **eligible employees**, but the specific eligibility criteria (e.g., length of service) are not detailed in the available source.\n\n## Open Questions\n\n- What are the precise eligibility requirements (such as minimum tenure) for receiving paid parental leave at Northwind Labs?\n- Are there any provisions for extending or modifying the leave under special circumstances?\n",
+ "error": null
+}

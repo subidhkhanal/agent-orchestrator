@@ -1,0 +1,177 @@
+{
+ "task_id": "both-per-diem-vs-gsa",
+ "category": "both",
+ "system": "single-agent",
+ "status": "completed",
+ "termination": "budget_exhausted",
+ "wall_s": 299.83,
+ "usd": 0.012547,
+ "tokens": 54625,
+ "budget_exceeded": false,
+ "llm_calls": 13,
+ "rate_limit_waits": 19,
+ "node_latencies": [
+  [
+   "single_agent",
+   299828
+  ]
+ ],
+ "routes_valid": 0,
+ "routes_invalid": 0,
+ "guard_overrides": {},
+ "sources": 27,
+ "claims": 13,
+ "supported_claims": 2,
+ "citation_validity": 0.1538,
+ "facts_found": true,
+ "judge": {
+  "task_success": false,
+  "score": 2,
+  "unsupported_claims": 1,
+  "correct_abstention": null,
+  "rationale": "The memo cites Northwind's $95 rate correctly, but the claim that U.S. government foreign per\u2011diem rates range from $70 to $250 is not directly supported by the provided source snippet.",
+  "judge_usd": 0.000718
+ },
+ "memo": "## Comparison of Northwind Labs International Meal Per Diem with U.S. Government Foreign Per Diem Rates\n\n### Northwind Labs International Meal Per Diem\n- Northwind Labs\u2019 travel policy specifies a **daily meal per\u2011diem of $95 USD for international travel** (see the company\u2019s Travel and Expense Policy) [doc_af5bb708].\n- The same policy sets the domestic meal per\u2011diem at $65 USD, but the focus here is the international rate.\n\n### U.S. Government Foreign Per Diem Rates\n- The U.S. State Department, not the General Services Administration, sets the foreign (international) per\u2011diem rates used for federal employee travel abroad. These rates cover meals and incidental expenses (M&IE) and are adjusted each fiscal year to reflect local cost\u2011of\u2011living conditions.\n- For fiscal year 2026, the State Department published a table of foreign per\u2011diem rates that range roughly from **$70 to $250 per day** for meals and incidentals, depending on the destination country and city [src_53448be1].\n- The rates are available in a downloadable spreadsheet and via the State Department\u2019s online Per Diem Lookup tool.\n- Travelers must use the posted rate for the specific location; any amount not spent is not reimbursed, and any amount exceeded must be covered by the traveler.\n\n### Comparative Observations\n- Northwind Labs\u2019 flat international meal per\u2011diem of **$95** is **within the lower\u2011to\u2011mid range** of U.S. government foreign M&IE rates, which start around $70 for low\u2011cost locations and exceed $200 for high\u2011cost cities.\n- For destinations where the State Department\u2019s M&IE rate is below $95 (e.g., many low\u2011cost countries), a Northwind traveler would receive a slightly higher allowance than the government rate.\n- Conversely, for high\u2011cost locations where the government rate exceeds $95 (e.g., major European capitals or Japan), the Northwind allowance would be **lower** than the government\u2011mandated amount.\n- The U.S. government\u2019s approach is location\u2011specific, whereas Northwind uses a **uniform international rate**, simplifying administration but potentially leading to over\u2011 or under\u2011payment relative to local costs.\n\n## Open Questions\n- Does Northwind Labs adjust its $95 international per\u2011diem for high\u2011cost locations, or is the flat rate applied universally?\n- Are there any caps or additional allowances for lodging that interact with the meal per\u2011diem in Northwind\u2019s policy?\n- How frequently does Northwind review or update its per\u2011diem amounts to reflect inflation or market changes?",
+ "error": null,
+ "models_used": {
+  "openai/gpt-oss-120b": 13
+ },
+ "sources_brief": [
+  {
+   "id": "src_08cd1290",
+   "title": "Meals & Incidentals Reimbursements Caps, and Receipt Requirements - Accounting Services",
+   "snippet": "Non-employee travelers (including candidates, independent contractors, consultants, students, volunteers, and others) will be reimbursed for actual meal and incidental expenses up to $92 per day.\n\nThis limit applies in lieu of the location-based federal per diem rates used for employee travel. Recei"
+  },
+  {
+   "id": "src_a8940cf9",
+   "title": "Travel Reimbursement and Per Diem - Business & Finance",
+   "snippet": "Other expenses not included in the M&IE rates may be reimbursed using the actual receipt method.\n\n## Meals Provided\n\nReduce the amount of the M&IE foreign per diem you are claiming if you were provided any meals during your travel, including meals at a conference or on board an airplane, train, or s"
+  },
+  {
+   "id": "src_701bfe2f",
+   "title": "NorthWind, LLC Information",
+   "snippet": "NorthWind, LLC is a full service managing general underwriter of various specialty insurance products. Since its 1997 inception, NorthWind has written over $500 million of premium for insurance companies rated \u201cExcellent\u201d by AM Best across 40 states. In addition to its underwriting services, the com"
+  },
+  {
+   "id": "src_2f670214",
+   "title": "Understanding Per Diem :: Unrestricted Accounting, Main & Branch | The University of New Mexico",
+   "snippet": "In-State Travel \u2013 For travel within New Mexico, UNM travelers are entitled to the Meal Per Diem rates published by the New Mexico Department of Finance and Administration, aka DFA Rate.\n\n Out-of-State Domestic Travel \u2013 UNM Travelers are entitled to the Meal & Incidental rates published by the U.S De"
+  },
+  {
+   "id": "src_3c87d71a",
+   "title": "M&IE breakdowns | GSA",
+   "snippet": "GSA.gov\n\nAn official website of the U.S. General Services Administration\n\n## PER DIEM LOOK-UP\n\n### 1 Choose a location\n\nError, The Per Diem API is not responding. Please try again later.\n\nNo results could be found for the location you've entered.\n\nRates for Alaska, Hawaii, and U.S. territories and p"
+  },
+  {
+   "id": "src_d54d4302",
+   "title": "Frequently asked questions, per diem | GSA",
+   "snippet": "Per diem is an allowance for lodging, meals, and incidental expenses. The U.S. General Services Administration (GSA) establishes the per diem reimbursement rates that federal agencies use to reimburse their employees for subsistence expenses incurred while on official travel within the continental U"
+  },
+  {
+   "id": "src_ed45bf02",
+   "title": "U.S. Department of State | Home Page",
+   "snippet": "| Select by Location      Select by Allowance Type      Printer Friendly Printer Friendly Foreign Per Diem Rates by Location DSSR 925    You may use the dropdown box below to select a country. Entering the first letter of the country name will jump to that portion of the listing. Clicking \"Go\" will "
+  },
+  {
+   "id": "src_95cdf6d7",
+   "title": "%DOC_TITLE%North Wind Group",
+   "snippet": "- %LABEL\\_MULTIPLE\\_LOCATIONS% (3)\n    - %LABEL\\_POSITION\\_TYPE\\_OTHER%\n    - Engineering\n    - $144,000 \u2013 $180,000 / year\n\n## FAIRBANKS, AK\n\n + ## Administrative Assistant 04214 NWSS\n\n    - FAIRBANKS, AK\n    - %LABEL\\_POSITION\\_TYPE\\_FULL\\_TIME%\n    - Operations\n\n## FORT DETRICK, MD\n\n + ## Sr. Bioc"
+  },
+  {
+   "id": "src_516c5557",
+   "title": "NorthWind Labs - Practical AI applications powered by large language models.",
+   "snippet": "# NorthWind Labs\nPractical AI applications powered by large language models.\nIT Services and IT Consulting \u2022 N/A \u2022 12 followers \u2022 1 employee\n\n## Overview\nNorthWind Labs builds AI applications that work in practice. We focus on large language models and how they can be integrated into real workflows,"
+  },
+  {
+   "id": "src_e8931f77",
+   "title": "North Wind Test Number of Employees 2026 | Employee Count & Headcount Data | Revelio Labs",
+   "snippet": "North Wind Test's functional groups are Engineering (39.9%), Finance and Operations (33.7%), and Sales and Marketing (26.4%), with Engineering growing fastest (up 7.9%). The average salary is $96,157, ranging from a median of $104,000 in North America to $6,000 in South Asia, up 4.0% year over year "
+  },
+  {
+   "id": "src_23d31b18",
+   "title": "Per Diem Rate Rankings -- GSA Lodging & M&IE by Facility | NukeWorker",
+   "snippet": "| # | QuartileQ | Facility | State | Avg Lodging/NightLodge | Avg M&IE/DayM&IE | Avg Total/DayTotal |\n ---  ---  --- \n| 1 | Top QuartileTop | Zion 2 | IL | $195.25$195 | $92.00$92 | $287.25$287 |\n| 2 | Top QuartileTop | Zion 1 | IL | $195.25$195 | $92.00$92 | $287.25$287 |\n| 3 | Top QuartileTop | Ar"
+  },
+  {
+   "id": "src_6bd82211",
+   "title": "North Wind | Accelerate the Future of Flight",
+   "snippet": "Developing specialized test facilities from laboratory to production scale with advanced instrumentation for precise data collection, tailored to the specific needs of the application.\n\n Learn more\n\n### Ground Test Services\n\nUtilizing cutting-edge facilities, critical industry and government program"
+  },
+  {
+   "id": "src_53448be1",
+   "title": "International Per Diem Rates For 2026: A Complete Guide",
+   "snippet": "## FAQs\n\nInternational per diem rates for 2026 vary by country and city. They're set by the U.S. State Department and updated monthly. For example, London's total per diem is approximately $598 per day (lodging plus M&IE), while Tokyo and Paris carry similarly high rates. Always check the State Depa"
+  },
+  {
+   "id": "src_950ba319",
+   "title": "U.S. Department of State | Home Page",
+   "snippet": "Footnote Reference | Description || 21 | Effective January 1, 2026, the Per Diem rate of $704 ($600 for lodging and $104 for M&IE) applies to U.S. government travelers to game park areas as authorized by specific post policy in Tanzania. This rate will expire on December 31, 2026. |\n\nImage - DOS Div"
+  },
+  {
+   "id": "src_a770e580",
+   "title": "Reminder Federal: FY 2026 Per Diem Rates Start Oct 1",
+   "snippet": "How to Find Rates: Use the GSA Per Diem Lookup Tool for specific locations. The site also provides links to Department of Defense and State Department rates for OCONUS and foreign travel: GSA \u2013 Per Diem Rates\n\n If per diem rates are insufficient, agencies may authorize actual expense reimbursement u"
+  },
+  {
+   "id": "src_8128edd8",
+   "title": "U.S. Department of State | Home Page",
+   "snippet": "Not Found Foreign Per Diem Rates In U.S. Dollars DSSR 925  Publication Date: 10/01/2026   ---  |  |  |  |  ---  | Previous Rates: | [...] Not Found Foreign Per Diem Rates In U.S. Dollars DSSR 925  Publication Date: 10/01/2026   ---  |  |  |  |  ---  | Previous Rates: | [...] | Select by Location    "
+  },
+  {
+   "id": "src_62eadb19",
+   "title": "Per diem rates | GSA",
+   "snippet": "Last updated: Sep 3, 2026\n\nTop\n\n## PER DIEM LOOK-UP\n\n### 1 Choose a location\n\nError, The Per Diem API is not responding. Please try again later.\n\nNo results could be found for the location you've entered.\n\nGet my location\n\n  OR\n\n  OR\n\nRates for Alaska, Hawaii, and U.S. territories and possessions ar"
+  },
+  {
+   "id": "src_b4305cb2",
+   "title": "Travel Reimbursement Policy",
+   "snippet": "Reimbursement will be provided up to a maximum allowable $79 per diem, with no receipts required. This is designed to cover the cost of meals and incidental expenses such as non-meal tips while traveling. Current per diem rates are available at:\n\nBreakfast:     $18  \n Lunch:           $20  \n Dinner:"
+  },
+  {
+   "id": "src_9536ac17",
+   "title": "ServiceNow Service Management",
+   "snippet": "Local travel is travel necessary to conduct official Laboratory business and is performed by the most direct route within and adjacent to an employee\u2019s official worksite/duty station or appropriate alternative worksite. Typically, local travel is of one-day duration or less and can be conducted with"
+  },
+  {
+   "id": "src_b2c6fa96",
+   "title": "Choosing the Best Business Travel Reimbursement Method",
+   "snippet": "With the per diem method, employees receive a predetermined daily amount to cover lodging, meals, and incidental expenses. This approach simplifies recordkeeping, as employees only need to document the time, place, and purpose of their travel\u2014receipts aren\u2019t required.\n\nThe advantages of the per diem"
+  },
+  {
+   "id": "src_e6505ceb",
+   "title": "Ultralytics Employee Travel Policy \ud83c\udf10",
+   "snippet": "Employees traveling for business will receive a daily per diem allowance based on their destination. All amounts below are in USD, verified on September 24, 2026 against the September 1, 2026 U.S. Department of State schedule and GSA FY 2026 rates (October 1, 2025\u2013September 30, 2026). The company ad"
+  },
+  {
+   "id": "src_1f48ab2a",
+   "title": "Per Diem Guidance: Procurement & Payment Services - Northwestern University",
+   "snippet": "\\ As defined by the Federal Travel Regulations.\n\n## Policies\n\n Travel and Entertainment Policy\n Key Changes to Northwestern Travel and Entertainment Policy\n\n## Training\n\n Entering Per Diem on an NUFinancials Expense Report in Knowledge Base\n\n## Related Links\n\nCalculate deductions for meals provided "
+  },
+  {
+   "id": "doc_af5bb708",
+   "title": "Northwind_Travel_and_Expense_Policy.md - Per Diem and Hotels",
+   "snippet": "## Northwind Labs Travel and Expense Policy > Per Diem and Hotels\n\n| Item | Domestic | International |\n|---|---|---|\n| Daily meal per diem | 65 USD | 95 USD |\n\nHotel stays are capped at 275 USD per night in major cities and 180 USD per night elsewhere.\nBook hotels through the corporate travel portal"
+  },
+  {
+   "id": "doc_9903c1d5",
+   "title": "Northwind_Travel_and_Expense_Policy.md - Expenses",
+   "snippet": "## Northwind Labs Travel and Expense Policy > Expenses\n\nUse the corporate Amex card for travel costs. Receipts are required for every expense above 25 USD.\nPersonal car mileage is reimbursed at 0.67 USD per mile.\nSubmit expense reports within 30 days of returning from a trip."
+  },
+  {
+   "id": "doc_b8e8c09f",
+   "title": "Northwind_Travel_and_Expense_Policy.md - Approval",
+   "snippet": "## Northwind Labs Travel and Expense Policy > Approval\n\nBusiness travel must be approved by your manager at least 7 days before departure."
+  },
+  {
+   "id": "doc_7212225c",
+   "title": "Northwind_Travel_and_Expense_Policy.md - Flights",
+   "snippet": "## Northwind Labs Travel and Expense Policy > Flights\n\nBook economy class for flights under 6 hours. Premium economy is allowed for flights of 6 hours or longer."
+  },
+  {
+   "id": "doc_60da7648",
+   "title": "Northwind_Engineering_Onboarding.md - On-Call",
+   "snippet": "## Northwind Labs Engineering Onboarding > On-Call\n\nThe on-call rotation is weekly and hands over on Mondays at 10:00 UTC. Pages are routed through PagerDuty.\nEngineers receive an on-call stipend of 400 USD per week on call. SEV1 incidents require acknowledgement within 5 minutes."
+  }
+ ]
+}

@@ -1,0 +1,188 @@
+{
+ "task_id": "both-per-diem-vs-gsa",
+ "category": "both",
+ "system": "research-memo",
+ "status": "completed",
+ "termination": "budget_exhausted",
+ "wall_s": 268.95,
+ "usd": 0.011548,
+ "tokens": 58380,
+ "budget_exceeded": false,
+ "llm_calls": 18,
+ "rate_limit_waits": 12,
+ "node_latencies": [
+  [
+   "supervisor",
+   563
+  ],
+  [
+   "researcher",
+   6330
+  ],
+  [
+   "supervisor",
+   612
+  ],
+  [
+   "researcher",
+   7702
+  ],
+  [
+   "supervisor",
+   681
+  ],
+  [
+   "coder",
+   48641
+  ],
+  [
+   "supervisor",
+   1443
+  ],
+  [
+   "reviewer",
+   156692
+  ],
+  [
+   "supervisor",
+   664
+  ],
+  [
+   "coder",
+   23149
+  ],
+  [
+   "supervisor",
+   0
+  ],
+  [
+   "reviewer",
+   22446
+  ],
+  [
+   "supervisor",
+   0
+  ]
+ ],
+ "routes_valid": 5,
+ "routes_invalid": 0,
+ "guard_overrides": {
+  "budget_low": 2
+ },
+ "sources": 19,
+ "claims": 14,
+ "supported_claims": 7,
+ "citation_validity": 0.5,
+ "facts_found": false,
+ "judge": {
+  "task_success": false,
+  "score": 2,
+  "unsupported_claims": 1,
+  "correct_abstention": null,
+  "rationale": "The memo asserts that no public source describes Northwind Labs' per diem, citing company profiles that do not mention per diem, so the claim is unsupported. Other claims are supported, but the unsupported assertion leads to failure.",
+  "judge_usd": 0.000627
+ },
+ "memo": "## Purpose\n\nThis memo compares the international meal per\u2011diem approach used by Northwind Labs with the methodology employed by the U.S. government for foreign per\u2011diem rates.\n\n## Northwind Labs International Meal Per Diem\n\nNo publicly available source was found that describes a specific Northwind Labs international meal\u2011per\u2011diem amount, calculation method, or policy document. Company profiles and internal lab documentation mention Northwind Labs\u2019 AI focus and organizational structure but do not contain per\u2011diem details[src_9d8410a7][src_516c5557].\n\n## U.S. Government Foreign Per Diem Rates\n\n* The U.S. General Services Administration (GSA) establishes per\u2011diem allowances for lodging, meals, and incidental expenses (M&IE) that federal agencies use for official travel within the continental United States[src_d54d4302].\n* For international travel, the U.S. Department of State sets foreign per\u2011diem rates. These rates are typically higher than domestic rates to reflect differences in cost of living, lodging prices, and local expenses outside the United States[src_53448be1].\n* The foreign rates are published annually and break down the allowance into separate components for lodging, meals, and incidentals.\n\n## Comparison\n\n| Aspect | Northwind Labs | U.S. Government |\n|--------|----------------|-----------------|\n| Source of rates | No publicly documented source; internal policy not available | GSA (domestic) and Department of State (foreign) publish official rates annually[src_d54d4302][src_53448be1] |\n| Rate components | Unknown (no disclosed lodging, meals, or incidentals) | Separate amounts for lodging, meals, and incidental expenses; meals component often referred to as M&IE[src_d54d4302] |\n| Calculation method | Not described in available sources | Rates are set based on market surveys and cost\u2011of\u2011living analyses; foreign rates are higher to reflect local cost differences[src_53448be1] |\n| Tax treatment | Not documented; U.S. per\u2011diem generally non\u2011taxable when below federal limits[src_4ad73c27] | Per\u2011diem payments are generally non\u2011taxable if they do not exceed federal rates and proper documentation is provided[src_4ad73c27] |\n\n## Open Questions\n\n* What is the exact international meal\u2011per\u2011diem amount (or percentage of a benchmark rate) that Northwind Labs applies to its employees?\n* Does Northwind Labs follow a specific policy model (e.g., fixed rate, percentage of GSA rates, or market\u2011based) for international travel?\n* How does Northwind Labs handle tax reporting for per\u2011diem amounts that exceed federal limits, if applicable?\n\n## Recommendation\n\nTo enable a substantive comparison, obtain Northwind Labs\u2019 internal travel policy or a public statement that outlines its international meal\u2011per\u2011diem methodology and rates. Once that information is available, the memo can be updated to detail similarities, differences, and best\u2011practice considerations.\n",
+ "error": null,
+ "models_used": {
+  "openai/gpt-oss-20b": 5,
+  "openai/gpt-oss-120b": 13
+ },
+ "sources_brief": [
+  {
+   "id": "src_7612a277",
+   "title": "International Per Diem Rates: Policy, Tax, and Program Best Practices",
+   "snippet": "Discover Navan\n\n## Four Policy Models for International Per Diem\n\nCompanies typically choose one of four approaches, with the best fit depending on program size, destination mix, and administrative capacity. Each makes a different tradeoff between simplicity, cost control, data visibility, and burde"
+  },
+  {
+   "id": "src_4ad73c27",
+   "title": "What Does Per Diem Mean? How to Create a Per Diem Policy",
+   "snippet": "### \n\n  Per diem payments are generally not taxable if they do not exceed federal rates and the employee provides basic documentation of business travel purpose, dates, and destination. Amounts exceeding federal limits are typically taxable and must be reported as income.\n ### \n\n  Per diem typically"
+  },
+  {
+   "id": "src_153ede13",
+   "title": "International Per Diem Rates 2026: Complete Country Guide",
+   "snippet": "On the first and last day of international travel, employees receive 75% of the full meal rate. For example, if the location's meal rate is $120/day, travelers get $90 on travel days. Lodging and incidentals follow standard rates for actual days at the destination. When crossing time zones, the dest"
+  },
+  {
+   "id": "src_aca9b822",
+   "title": "Business Travel Meals - Business & Finance",
+   "snippet": "The University Travel Card (TCard) may not be used for meal purchases when in travel status, except when hosting an allowable business meal.\n\n## Per Diem FAQs\n\n### How is per diem calculated for foreign travel?\n\nInternational Per Diem rates apply once the employee is onboard the aircraft leaving the"
+  },
+  {
+   "id": "src_5658d065",
+   "title": "Lab M1 - Get to know Northwind message extension - Copilot Developer Camp",
+   "snippet": "logo\nlogo\n\n# Lab M1 - Get to know Northwind message extension\n\nIn this lab, you\u2019ll run the Northwind message extension, your base app. The initial exercises will make you familiar with the source code. Finally, you\u2019ll run the application in Teams.\n\nIn this lab you will:\n\n## Exercise 1 - Code tour\n\nL"
+  },
+  {
+   "id": "src_9d8410a7",
+   "title": "Northwind Labs \u2014 Company Profile | THE FOUNDER",
+   "snippet": "Technology\n\n### AI Is Changing How Startups Build Products\n\nProduct teams are compressing discovery, prototyping and iteration into days. The constraint is no longer building \u2014 it is deciding what deserves to exist.\n\nByThe Founder Editorial\u00b7September 5, 2026\u00b76 min read\n\nInside the Startup: Northwind"
+  },
+  {
+   "id": "src_516c5557",
+   "title": "NorthWind Labs - Practical AI applications powered by large language models.",
+   "snippet": "# NorthWind Labs\nPractical AI applications powered by large language models.\nIT Services and IT Consulting \u2022 N/A \u2022 12 followers \u2022 1 employee\n\n## Overview\nNorthWind Labs builds AI applications that work in practice. We focus on large language models and how they can be integrated into real workflows,"
+  },
+  {
+   "id": "src_e8931f77",
+   "title": "North Wind Test Number of Employees 2026 | Employee Count & Headcount Data | Revelio Labs",
+   "snippet": "North Wind Test's functional groups are Engineering (39.9%), Finance and Operations (33.7%), and Sales and Marketing (26.4%), with Engineering growing fastest (up 7.9%). The average salary is $96,157, ranging from a median of $104,000 in North America to $6,000 in South Asia, up 4.0% year over year "
+  },
+  {
+   "id": "src_74764b5b",
+   "title": "Per Diem Restaurant",
+   "snippet": "# Per Diem Restaurant\n\nPer Diem offers a unique style and ambiance in an upscale venue in the heart of the City. Whether you're looking for a small intimate gathering or a full restaurant buyout, Per Diem is the ideal venue to host your private event. Our event staff will work with you in throughout"
+  },
+  {
+   "id": "src_a8940cf9",
+   "title": "Travel Reimbursement and Per Diem - Business & Finance",
+   "snippet": "Other expenses not included in the M&IE rates may be reimbursed using the actual receipt method.\n\n## Meals Provided\n\nReduce the amount of the M&IE foreign per diem you are claiming if you were provided any meals during your travel, including meals at a conference or on board an airplane, train, or s"
+  },
+  {
+   "id": "src_152d6e6a",
+   "title": "What are Per Diem Payments?",
+   "snippet": "Per diem rates can vary widely depending on where an employee is traveling. If an employee is going to New York City, for example, the lodging rate increases from the standard $96 per night to $298 per night. The meal rate increases from $55 per day to $76 per day.\n\nWhile many locations (319 destina"
+  },
+  {
+   "id": "src_1f48ab2a",
+   "title": "Per Diem Guidance: Procurement & Payment Services - Northwestern University",
+   "snippet": "The employee is unable to consume the furnished meal(s) because of medical requirements or religious beliefs;\n The employee was unable to take part in a furnished meal due to the conduct of official business.\n To calculate deductions for meals provided/search per diem rates:\n  + Domestic (continenta"
+  },
+  {
+   "id": "src_8daca756",
+   "title": "Calculating Per Diem // Accounting & Fiscal Services // UC Irvine",
+   "snippet": "International Per Diems shall be calculated in multiples of the applicable federal per diem rate based on the total number of hours between the time of arrival at the foreign or OCONUS location and the time of departure for the return trip to the traveler's headquarters or residence.\n The daily subs"
+  },
+  {
+   "id": "src_2f670214",
+   "title": "Understanding Per Diem :: Unrestricted Accounting, Main & Branch | The University of New Mexico",
+   "snippet": "In-State Travel \u2013 For travel within New Mexico, UNM travelers are entitled to the Meal Per Diem rates published by the New Mexico Department of Finance and Administration, aka DFA Rate.\n\n Out-of-State Domestic Travel \u2013 UNM Travelers are entitled to the Meal & Incidental rates published by the U.S De"
+  },
+  {
+   "id": "src_d54d4302",
+   "title": "Frequently asked questions, per diem | GSA",
+   "snippet": "Per diem is an allowance for lodging, meals, and incidental expenses. The U.S. General Services Administration (GSA) establishes the per diem reimbursement rates that federal agencies use to reimburse their employees for subsistence expenses incurred while on official travel within the continental U"
+  },
+  {
+   "id": "src_3c87d71a",
+   "title": "M&IE breakdowns | GSA",
+   "snippet": "GSA.gov\n\nAn official website of the U.S. General Services Administration\n\n## PER DIEM LOOK-UP\n\n### 1 Choose a location\n\nError, The Per Diem API is not responding. Please try again later.\n\nNo results could be found for the location you've entered.\n\nRates for Alaska, Hawaii, and U.S. territories and p"
+  },
+  {
+   "id": "src_53448be1",
+   "title": "International Per Diem Rates For 2026: A Complete Guide",
+   "snippet": "Domestic per diem rates, such as those set by the U.S. General Services Administration (GSA), differ from international rates. The U.S. State Department sets foreign per diem allowances, which are typically higher to reflect differences in cost of living, lodging prices, and local expenses outside t"
+  },
+  {
+   "id": "src_62eadb19",
+   "title": "Per diem rates | GSA",
+   "snippet": "We establish the per diem rates that federal agencies use to reimburse their employees for lodging and meals and incidental expenses incurred while on official travel within the continental United States. A standard rate applies to most of CONUS. Individual rates apply to about 300 non-standard area"
+  },
+  {
+   "id": "src_c68342fe",
+   "title": "Per Diem  | Defense Travel Management Office",
+   "snippet": "Per diem is a set allowance for lodging, meal and incidental costs incurred while on official government travel. Calculation of travel per diem rates within the Federal government is a shared responsibility of the General Services Administration (GSA), the Department of State (DoS), and the Defense "
+  }
+ ]
+}

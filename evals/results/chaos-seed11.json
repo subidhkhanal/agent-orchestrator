@@ -1,0 +1,21 @@
+{
+  "runs": 50,
+  "workers": 3,
+  "worker_kills": 13,
+  "kills_while_holding_a_run": 12,
+  "statuses": {
+    "COMPLETED": 50
+  },
+  "completed_pct": 100.0,
+  "runs_resumed_by_another_worker": 7,
+  "total_recoveries": 9,
+  "runs_published": 50,
+  "duplicate_external_effects": 0,
+  "deduplicated_redeliveries": 0,
+  "approvals": 50,
+  "approvals_with_double_clicks": 20,
+  "gates_resumed_more_than_once": 0,
+  "failed_runs": [],
+  "wall_clock_s": 32.7,
+  "seed": 11
+}

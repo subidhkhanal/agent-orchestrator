@@ -1,0 +1,45 @@
+{
+ "task_id": "none-ceo",
+ "category": "impossible",
+ "system": "research-memo",
+ "status": "completed",
+ "termination": "supervisor_finished",
+ "wall_s": 63.05,
+ "usd": 0.001793,
+ "tokens": 11311,
+ "budget_exceeded": false,
+ "llm_calls": 8,
+ "rate_limit_waits": 1,
+ "node_latencies": [
+  [
+   "supervisor",
+   2744
+  ],
+  [
+   "researcher",
+   54700
+  ],
+  [
+   "supervisor",
+   5595
+  ]
+ ],
+ "routes_valid": 2,
+ "routes_invalid": 0,
+ "guard_overrides": {},
+ "sources": 10,
+ "claims": 0,
+ "supported_claims": 0,
+ "citation_validity": null,
+ "facts_found": null,
+ "judge": {
+  "task_success": false,
+  "score": 1,
+  "unsupported_claims": 0,
+  "correct_abstention": false,
+  "rationale": "The system returned no memo, failing to explicitly state that the CEO profile cannot be derived from the provided documents. It did not acknowledge the unanswerable nature of the request.",
+  "judge_usd": 0.000345
+ },
+ "memo": null,
+ "error": null
+}
