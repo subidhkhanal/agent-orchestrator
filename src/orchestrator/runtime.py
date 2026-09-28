@@ -38,19 +38,34 @@ from orchestrator.tools.services import (
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
+def project_path(path: str | Path) -> Path:
+    """Resolve a project-relative path (e.g. config/models.toml).
+
+    Tries the working directory first (the container runs from /app, and the package is
+    installed into site-packages, so paths relative to this file would be wrong there), then
+    the source checkout this module lives in (editable installs, tests).
+    """
+    p = Path(path)
+    if p.is_absolute():
+        return p
+    for base in (Path.cwd(), REPO_ROOT):
+        if (base / p).exists():
+            return base / p
+    return Path.cwd() / p
+
+
 class ModelUnavailable(Exception):
     pass
 
 
 def load_settings() -> Settings:
-    load_dotenv(REPO_ROOT / ".env")
+    load_dotenv(project_path(".env"))
     return Settings()
 
 
 def gateway_config(settings: Settings) -> GatewayConfig:
     path = "config/models.fake.toml" if settings.fake_llm else settings.models_config
-    full = Path(path) if Path(path).is_absolute() else REPO_ROOT / path
-    return GatewayConfig.load(full)
+    return GatewayConfig.load(project_path(path))
 
 
 def build_providers(config: GatewayConfig, settings: Settings) -> dict[str, LLMProvider]:

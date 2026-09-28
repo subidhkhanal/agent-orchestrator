@@ -27,6 +27,7 @@ from orchestrator.gateway.providers.demo_policy import ResearchMemoPolicy
 from orchestrator.gateway.providers.fake import FakeLLM
 from orchestrator.graphs.definitions import default_registry
 from orchestrator.offline import DEFAULT_MODELS_CONFIG, SAMPLE_RAG_HITS, SAMPLE_SEARCH_HITS
+from orchestrator.runtime import project_path
 from orchestrator.state.models import Budget, RunState
 from orchestrator.tools import default_registry as default_tools
 from orchestrator.tools.services import StaticRag, StaticSearch, StubSandbox, ToolServices
@@ -125,7 +126,9 @@ def make_stack(pool: Any, llm: FakeLLM | None = None) -> Stack:
     events = PostgresEventLog(pool)
     sink = PostgresPublishSink(pool)
     deps = EngineDeps(
-        gateway=LLMGateway(GatewayConfig.load(DEFAULT_MODELS_CONFIG), {"fake": llm}, clock),
+        gateway=LLMGateway(
+            GatewayConfig.load(project_path(DEFAULT_MODELS_CONFIG)), {"fake": llm}, clock
+        ),
         tools=default_tools(),
         services=ToolServices(
             search=StaticSearch(default=list(SAMPLE_SEARCH_HITS)),

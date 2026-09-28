@@ -30,7 +30,8 @@ from orchestrator.tools.services import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_MODELS_CONFIG = REPO_ROOT / "config" / "models.fake.toml"
+# Resolved lazily (see runtime.project_path) so it also works from an installed package.
+DEFAULT_MODELS_CONFIG = Path("config") / "models.fake.toml"
 
 SAMPLE_SEARCH_HITS = [
     SearchHit(
@@ -70,7 +71,10 @@ def build_offline(
 ) -> tuple[LocalRunner, EngineDeps]:
     clock = clock or FakeClock()
     llm = llm or FakeLLM(policy=ResearchMemoPolicy())
-    config = config or GatewayConfig.load(DEFAULT_MODELS_CONFIG)
+    if config is None:
+        from orchestrator.runtime import project_path
+
+        config = GatewayConfig.load(project_path(DEFAULT_MODELS_CONFIG))
     deps = EngineDeps(
         gateway=LLMGateway(config, {"fake": llm}, clock),
         tools=default_tools(),
