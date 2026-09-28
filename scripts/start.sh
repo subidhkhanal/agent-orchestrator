@@ -2,6 +2,9 @@
 # Container entrypoint: migrate, then run the API and the worker.
 # With EMBEDDED_WORKER=true (small free hosts) the worker runs inside the API process.
 set -e
+# On Render, keep-alive pings the service's own public URL unless set explicitly.
+export KEEPALIVE_URL="${KEEPALIVE_URL:-${RENDER_EXTERNAL_URL:-}}"
+[ -z "$KEEPALIVE_URL" ] && unset KEEPALIVE_URL
 alembic upgrade head
 if [ "${EMBEDDED_WORKER:-false}" = "true" ]; then
   exec python -m orchestrator.serve --port "${PORT:-8000}"

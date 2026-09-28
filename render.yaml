@@ -1,0 +1,55 @@
+# Render Blueprint: the backend (API + in-process worker) on Render's free plan.
+# Deploy: https://dashboard.render.com/blueprint/new?repo=https://github.com/subidhkhanal/agent-orchestrator
+# Secrets marked `sync: false` are entered once in the Render dashboard, never committed.
+services:
+  - type: web
+    name: agent-orchestrator-api
+    runtime: docker
+    plan: free
+    region: virginia
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /livez
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL          # Neon *direct* (unpooled) connection string
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      # One process: the worker runs inside the API (free instance has 512 MB).
+      - key: EMBEDDED_WORKER
+        value: "true"
+      - key: WORKER_ID
+        value: render
+      # Let the scale-to-zero database sleep: wake the worker in-process, poll rarely,
+      # and close idle connections.
+      - key: WORKER_POLL_S
+        value: "900"
+      - key: WORKER_SWEEP_S
+        value: "900"
+      - key: DB_POOL_SIZE
+        value: "5"
+      - key: DB_POOL_MIN
+        value: "0"
+      - key: DB_POOL_MAX_IDLE_S
+        value: "60"
+      # Free web services sleep after 15 min without traffic; ping /livez every 10 min.
+      # KEEPALIVE_URL defaults to RENDER_EXTERNAL_URL (set by Render) in scripts/start.sh.
+      - key: KEEPALIVE_INTERVAL_S
+        value: "600"
+      # Public demo limits.
+      - key: DEMO_MODE
+        value: "true"
+      - key: CORS_ORIGINS
+        value: https://agent-orchestrator-opal.vercel.app
+      - key: DEMO_MAX_USD_PER_RUN
+        value: "0.03"
+      - key: DAILY_USD_CAP
+        value: "1.00"
+      - key: DAILY_TOKEN_CAP
+        value: "400000"
+      - key: RATE_LIMIT_RUNS_PER_HOUR
+        value: "10"
+      - key: MAX_TASK_CHARS
+        value: "500"
