@@ -40,6 +40,11 @@ services:
       # KEEPALIVE_URL defaults to RENDER_EXTERNAL_URL (set by Render) in scripts/start.sh.
       - key: KEEPALIVE_INTERVAL_S
         value: "600"
+      # Render's proxy sets X-Forwarded-For; trust it so rate limits see the visitor's real IP
+      # (without this every request appears to come from a proxy address). Safe because the
+      # service is only reachable through Render's proxy.
+      - key: FORWARDED_ALLOW_IPS
+        value: "*"
       # Public demo limits.
       - key: DEMO_MODE
         value: "true"
