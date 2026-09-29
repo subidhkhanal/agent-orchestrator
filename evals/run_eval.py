@@ -35,6 +35,11 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from dotenv import load_dotenv  # noqa: E402
+
+# Before any project import: LIBPQ_DIR (Windows) must be on PATH before psycopg loads.
+load_dotenv(ROOT / ".env")
+
 from orchestrator.agents import NODE_LIBRARY  # noqa: E402
 from orchestrator.citations import check_memo  # noqa: E402
 from orchestrator.clock import SystemClock  # noqa: E402
@@ -156,7 +161,9 @@ def interleave(tasks: list[dict[str, Any]]) -> list[dict[str, Any]]:
 async def wait_for_quota(args: argparse.Namespace, error: str) -> None:
     if not args.wait_for_quota:
         sys.exit(f"daily provider quota exhausted; re-run later with --resume\n{error[:300]}")
-    delay = quota_reset_seconds(error)
+    # The provider's window is rolling: retrying as soon as a few tokens free up starts runs
+    # that die halfway and are thrown away. Wait long enough for a whole run to fit.
+    delay = max(quota_reset_seconds(error), args.quota_min_wait)
     until = time.strftime("%H:%M", time.localtime(time.time() + delay))
     print(f"daily quota exhausted; waiting {delay / 60:.0f} min (until ~{until})", flush=True)
     await asyncio.sleep(delay)
@@ -555,6 +562,12 @@ if __name__ == "__main__":
     parser.add_argument("--resume", action="store_true", help="reuse finished per-run results")
     parser.add_argument(
         "--summarize-only", action="store_true", help="rebuild reports from saved runs"
+    )
+    parser.add_argument(
+        "--quota-min-wait",
+        type=float,
+        default=7200,
+        help="minimum seconds to wait after a daily-quota error",
     )
     parser.add_argument(
         "--wait-for-quota",
