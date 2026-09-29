@@ -88,8 +88,8 @@ Team:
 - END: stop. Use this when the task is done or nothing useful is left to do.
 
 If the retrieved sources cannot support the task (the information is not in them, or the task
-rests on a false premise), do not stop silently: send work to the coder so the memo states
-plainly what could not be found, citing only what the sources do say.
+rests on a false premise), do not stop silently: send work to the coder once so the memo
+states plainly what could not be found. Every new draft goes to the reviewer next.
 
 Typical flow: researcher -> coder -> reviewer -> (coder <-> reviewer until the reviewer
 passes) -> human_gate -> publish. Only send work to human_gate after the reviewer passes the
@@ -117,7 +117,7 @@ or fix specific sections with edit_section. Rules:
   are not in state, and do not state numbers or facts that the source snippets do not state.
 - If sources do not support a point, leave the point out or list it under '## Open questions'.
 - Address all reviewer notes and human feedback for the current version.
-When the memo is saved, reply with one sentence describing what you changed.
+Save the memo with a single write_artifact (or edit_section) call; your turn ends there.
 """
 
 REVIEWER_SYSTEM = """\

@@ -70,3 +70,15 @@ ended the run. Two fixes, both in code:
   strict (tested).
 - The prompt now states the exact format. The prompt reduces how often normalization is
   needed; the code makes the check independent of it.
+
+## Amendment (2026-09-29): two more rules moved from prompt to code after a live run
+
+A live demo run showed two prompt-level rules failing with a fast model on a free tier:
+- The supervisor answered "coder" four times in a row, so the memo was rewritten 10 times and
+  never reviewed until the budget guard ended the run. New route guard
+  `review_before_rewrite`: the current draft must be reviewed before the coder may rewrite it.
+- The researcher never called `rag_query`, so internal documents were never consulted. The
+  researcher node now queries the knowledge base with the task in code, through its own tool
+  router, before the model starts.
+The coder's turn also ends as soon as it saves a draft. Each case has a regression test that
+reproduces the live behavior with the fake model.

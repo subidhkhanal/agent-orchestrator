@@ -156,10 +156,29 @@ def guard_coder_requires_sources(state: RunState, proposed: str) -> GuardOverrid
     )
 
 
+def guard_review_before_rewrite(state: RunState, proposed: str) -> GuardOverride | None:
+    """The current draft must be reviewed before the coder rewrites it.
+
+    Without this, a supervisor that keeps answering "coder" rewrites the memo in a loop until
+    the budget runs out (seen on a live run). Human feedback goes to the coder directly from
+    the approval gate, not through this route, so it is unaffected.
+    """
+    artifact = state.current_artifact()
+    if proposed != "coder" or artifact is None or state.latest_verdict(artifact) is not None:
+        return None
+    return GuardOverride(
+        "review_before_rewrite",
+        proposed,
+        "reviewer",
+        f"memo v{artifact.version} has not been reviewed yet",
+    )
+
+
 ROUTE_GUARDS: tuple[Callable[[RunState, str], GuardOverride | None], ...] = (
     guard_publish_requires_approval,
     guard_human_gate_requires_artifact,
     guard_coder_requires_sources,
+    guard_review_before_rewrite,
 )
 
 

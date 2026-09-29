@@ -28,7 +28,7 @@ from orchestrator.agents.prompts import (
 from orchestrator.citations import check_memo
 from orchestrator.engine.context import NodeContext, NodeOutput
 from orchestrator.gateway.budget import BudgetExhausted, DeadlineExceeded
-from orchestrator.gateway.types import LLMRequest, Message
+from orchestrator.gateway.types import LLMRequest, Message, ToolCall
 from orchestrator.state.models import ReviewNote, RunState
 from orchestrator.state.patch import AppendOp, PatchOp, SetOp, StatePatch
 from orchestrator.state.reducer import apply_patch
@@ -67,9 +67,14 @@ async def run_tool_loop(
     system: str,
     user: str,
     max_rounds: int | None = None,
+    stop_after: frozenset[str] = frozenset(),
+    seed: LoopResult | None = None,
 ) -> LoopResult:
+    """`stop_after`: end the loop right after one of these tools succeeds (its job is done).
+    `seed`: state and ops already produced by code before the model runs."""
     router = ctx.deps.tools.router_for(role)
-    result = LoopResult(state=state)
+    result = seed or LoopResult(state=state)
+    state = result.state
     messages: list[Message] = [
         Message(role="system", content=system),
         Message(role="user", content=user),
@@ -108,6 +113,9 @@ async def run_tool_loop(
                     tool_call_id=call.id,
                 )
             )
+            if call.name in stop_after and outcome.status == "ok":
+                result.stopped = "answered"
+                return result
     result.stopped = "max_rounds"
     return result
 
@@ -122,9 +130,37 @@ async def _memo_text(state: RunState, ctx: NodeContext) -> str | None:
 # --- researcher ------------------------------------------------------------------------------
 
 
+async def _seed_internal_sources(state: RunState, ctx: NodeContext) -> LoopResult:
+    """Query the internal knowledge base with the task before the model starts.
+
+    Whether internal documents are consulted should not depend on the model remembering to
+    call rag_query (a fast model skipped it on a live run and only searched the web). The call
+    goes through the researcher's own ToolRouter, so allowlists and logging still apply.
+    """
+    seed = LoopResult(state=state)
+    if state.sources:  # later research rounds refine; the first round seeds
+        return seed
+    router = ctx.deps.tools.router_for("researcher")
+    call = ToolCall(id="seed_rag", name="rag_query", arguments={"question": state.task[:500]})
+    outcome = await router.invoke(call, ctx.tool_context(state))
+    if outcome.ops:
+        patch = StatePatch(
+            base_version=state.state_version, author="researcher", ops=tuple(outcome.ops)
+        )
+        seed.state = apply_patch(state, patch)
+        seed.ops.extend(outcome.ops)
+    return seed
+
+
 async def researcher_node(state: RunState, ctx: NodeContext) -> NodeOutput:
+    seed = await _seed_internal_sources(state, ctx)
     loop = await run_tool_loop(
-        "researcher", state, ctx, RESEARCHER_SYSTEM, render_view(state_view(state))
+        "researcher",
+        state,
+        ctx,
+        RESEARCHER_SYSTEM,
+        render_view(state_view(seed.state)),
+        seed=seed,
     )
     ops = list(loop.ops)
     if loop.final:
@@ -142,7 +178,12 @@ async def researcher_node(state: RunState, ctx: NodeContext) -> NodeOutput:
 async def coder_node(state: RunState, ctx: NodeContext) -> NodeOutput:
     memo = await _memo_text(state, ctx)
     loop = await run_tool_loop(
-        "coder", state, ctx, CODER_SYSTEM, render_view(state_view(state, memo=memo))
+        "coder",
+        state,
+        ctx,
+        CODER_SYSTEM,
+        render_view(state_view(state, memo=memo)),
+        stop_after=frozenset({"write_artifact", "edit_section"}),
     )
     artifact = loop.state.current_artifact()
     return NodeOutput(

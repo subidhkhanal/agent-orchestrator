@@ -189,3 +189,27 @@ def test_guards_never_produce_a_node_outside_the_graph() -> None:
     )
     with pytest.raises(InvariantViolation):
         enforce_invariants(make_state(), "coder", tiny)  # would need "researcher"
+
+
+# --- review before rewrite (found on a live run: supervisor looped on "coder") ---------------
+
+
+def test_unreviewed_draft_goes_to_reviewer_not_back_to_coder() -> None:
+    state = make_state(sources=[SOURCE], artifacts=[memo(2)])
+    result = enforce_invariants(state, "coder", GRAPH)
+    assert result.next_node == "reviewer"
+    assert [o.guard for o in result.overrides] == ["review_before_rewrite"]
+
+
+def test_coder_allowed_after_review_of_current_version() -> None:
+    verdict = {
+        "id": "n1",
+        "author": "reviewer",
+        "kind": "verdict",
+        "verdict": "changes_requested",
+        "text": "fix",
+        "artifact_id": "memo",
+        "artifact_version": 2,
+    }
+    state = make_state(sources=[SOURCE], artifacts=[memo(2)], review_notes=[verdict])
+    assert enforce_invariants(state, "coder", GRAPH).next_node == "coder"

@@ -234,3 +234,45 @@ async def test_single_agent_baseline_uses_the_union_of_tools_and_the_same_budget
     }
     nodes = [e.payload["node"] for e in deps.events.of_type("s1", EventType.NODE_STARTED)]  # type: ignore[attr-defined]
     assert nodes == ["single_agent"]
+
+
+async def test_researcher_always_consults_internal_documents() -> None:
+    """A model that only searches the web still gets the knowledge base queried (live bug)."""
+    from orchestrator.tools.services import StaticRag
+
+    llm = FakeLLM(policy=ResearchMemoPolicy())
+    llm.push("researcher", FakeReply(tool_calls=(("web_search", {"query": "parental leave"}),)))
+    rag = StaticRag(hits=list(build_offline()[1].services.rag.hits))  # type: ignore[attr-defined]
+    runner, _ = build_offline(llm=llm, rag=rag)
+    paused = await runner.start(
+        run_id="r1", tenant_id="t", graph_id="research-memo", task=TASK, budget=make_budget()
+    )
+    assert rag.questions[0] == TASK
+    assert any(s.id.startswith("doc_") for s in paused.state.sources)
+
+
+async def test_supervisor_stuck_on_coder_cannot_loop() -> None:
+    """The supervisor keeps answering "coder"; drafts still get reviewed (live bug)."""
+    llm = FakeLLM(policy=ResearchMemoPolicy())
+    stuck = FakeReply(content=json.dumps({"next_node": "coder", "reason": "rewrite"}))
+    llm.push(
+        "supervisor", FakeReply(content=json.dumps({"next_node": "researcher", "reason": "r"}))
+    )
+    llm.push("supervisor", *[stuck] * 4)
+    runner, deps = build_offline(llm=llm)
+    paused = await runner.start(
+        run_id="r1", tenant_id="t", graph_id="research-memo", task=TASK, budget=make_budget()
+    )
+    assert paused.status == "waiting_hitl"
+    overrides = [e.payload["guard"] for e in deps.events.of_type("r1", EventType.GUARD_OVERRIDE)]  # type: ignore[attr-defined]
+    assert "review_before_rewrite" in overrides
+    assert paused.state.current_artifact().version <= 2  # type: ignore[union-attr]
+
+
+async def test_coder_turn_ends_after_saving_a_draft() -> None:
+    llm = FakeLLM(policy=ResearchMemoPolicy())
+    runner, _ = build_offline(llm=llm)
+    await runner.start(
+        run_id="r1", tenant_id="t", graph_id="research-memo", task=TASK, budget=make_budget()
+    )
+    assert sum(c.node == "coder" for c in llm.calls) == 1  # one call: write, then stop
