@@ -10,7 +10,8 @@ Status (2026-09-29): **live.**
 
 Deploy or update the backend with `python scripts/render_deploy.py` (reads `RENDER_API_KEY` and the
 secrets from `.env`; pushes to `main` do not auto-deploy because the repo is not connected to
-Render's GitHub app). Redeploy the frontend with `cd frontend && npx vercel deploy --prod`.
+Render's GitHub app). The frontend deploys automatically on every push to `main` (the Vercel
+project is linked to the repo with Root Directory `frontend`).
 
 How the free tiers are handled:
 - Render sleeps a free service after 15 minutes without traffic; the app pings its own `/livez`
