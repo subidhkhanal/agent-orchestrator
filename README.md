@@ -9,6 +9,8 @@ resume from the last checkpoint. Budgets are enforced before each model call, no
 Safety rules live in code, not prompts. The one external side effect happens once, even when
 the node re-executes or a human double-clicks "approve".
 
+**Live demo:** https://agent-orchestrator-opal.vercel.app (free tiers; see [limitations](#limitations)).
+
 Every claim below links to a test or a measured result. Where something is not measured yet,
 this README says so.
 
@@ -254,9 +256,9 @@ Errors are `{"error": {"code", "message"}}`:
 ## Limitations
 
 - **Evaluation results are pending** (see above). No quality claim is made yet.
-- **No hosted backend yet.** The free hosting option (Hugging Face Docker Spaces) became paid
-  during this project. The frontend can be deployed on its own and then says so plainly; see
-  [docs/deploy.md](docs/deploy.md) for the options.
+- **Free-tier demo.** The live demo (Vercel + Render + Neon, all free tiers; see
+  [docs/deploy.md](docs/deploy.md)) shares Groq's free daily token quota. When it is used up,
+  runs are rate-limited and the budget guard ends them early with a partial result.
 - **Zombie checkpoint window.** Our own tables are fenced by the lease generation, but
   LangGraph's checkpoint writes are not. A paused worker that lost its lease could write one
   extra checkpoint before its next fenced write fails (ADR 0001).

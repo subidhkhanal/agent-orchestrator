@@ -1,6 +1,26 @@
 # Deploying
 
-Status (2026-09-29): **the frontend is live at https://agent-orchestrator-opal.vercel.app (offline mode); the backend is not hosted.**
+Status (2026-09-29): **live.**
+
+| Part | Where | Notes |
+|---|---|---|
+| Frontend | https://agent-orchestrator-opal.vercel.app | Vercel (Next.js) |
+| Backend (API + in-process worker) | https://agent-orchestrator-api-xdcq.onrender.com | Render free web service, Docker, `render.yaml` |
+| Database | Neon free (US East), provisioned through the Vercel marketplace | direct (unpooled) connection |
+
+Deploy or update the backend with `python scripts/render_deploy.py` (reads `RENDER_API_KEY` and the
+secrets from `.env`; pushes to `main` do not auto-deploy because the repo is not connected to
+Render's GitHub app). Redeploy the frontend with `cd frontend && npx vercel deploy --prod`.
+
+How the free tiers are handled:
+- Render sleeps a free service after 15 minutes without traffic; the app pings its own `/livez`
+  every 10 minutes (`KEEPALIVE_*`), so visitors do not hit a cold start.
+- Neon suspends after 5 minutes without queries and the free plan has 100 compute-hours a
+  month; the worker is woken in-process instead of polling (`WORKER_POLL_S=900`), idle
+  connections close after 60 s, and the SSE listener only connects while someone watches a run.
+- Groq's free tier allows ~200k tokens per model per day. When it runs out, calls are
+  rate-limited and fall back to a pricier model; the per-run budget guard then ends the run
+  cleanly (this happened on the first live run, on a day of heavy testing).
 
 ## What changed from the original plan
 
