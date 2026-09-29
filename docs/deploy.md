@@ -13,6 +13,12 @@ secrets from `.env`; pushes to `main` do not auto-deploy because the repo is not
 Render's GitHub app). The frontend deploys automatically on every push to `main` (the Vercel
 project is linked to the repo with Root Directory `frontend`).
 
+Verified on 2026-09-29 with a real task on the live site (browser-driven): the first draft was
+rejected with a comment, the writer's next version added what the comment asked for, the
+approved version was published exactly once (1 row, 1 delivery), in 157 s and 27,851 tokens.
+The demo runs its workers on `gpt-oss-20b` (`config/models.demo.toml`), keeping the
+`gpt-oss-120b` daily quota for the eval.
+
 How the free tiers are handled:
 - Render sleeps a free service after 15 minutes without traffic; the app pings its own `/livez`
   every 10 minutes (`KEEPALIVE_*`), so visitors do not hit a cold start.
