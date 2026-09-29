@@ -95,7 +95,7 @@ in code and in the database.
 
 ### Tests
 
-145 automated tests: 121 unit tests, and 24 integration tests against real Postgres. All of
+147 automated tests: 123 unit tests, and 24 integration tests against real Postgres. All of
 them use the deterministic fake LLM, so CI needs no API keys. Highlights:
 
 | Property | Test |
@@ -204,7 +204,7 @@ Then:
 
 ```bash
 alembic upgrade head
-pytest                                         # 145 tests; Postgres tests skip without TEST_DATABASE_URL
+pytest                                         # 147 tests; Postgres tests skip without TEST_DATABASE_URL
 python scripts/demo_offline.py --reject-first  # full run in-process, fake LLM, no services needed
 
 # Full stack (fake LLM, no keys needed):

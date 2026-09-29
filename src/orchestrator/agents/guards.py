@@ -174,9 +174,19 @@ def guard_review_before_rewrite(state: RunState, proposed: str) -> GuardOverride
     )
 
 
+def guard_reviewer_requires_draft(state: RunState, proposed: str) -> GuardOverride | None:
+    """There is nothing to review before the first draft (seen on a live run)."""
+    if proposed != "reviewer" or state.current_artifact() is not None:
+        return None
+    return GuardOverride(
+        "reviewer_requires_draft", proposed, "coder", "no draft exists yet to review"
+    )
+
+
 ROUTE_GUARDS: tuple[Callable[[RunState, str], GuardOverride | None], ...] = (
     guard_publish_requires_approval,
     guard_human_gate_requires_artifact,
+    guard_reviewer_requires_draft,
     guard_coder_requires_sources,
     guard_review_before_rewrite,
 )

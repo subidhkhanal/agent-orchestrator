@@ -17,6 +17,8 @@ services:
         sync: false
       - key: TAVILY_API_KEY
         sync: false
+      - key: MODELS_CONFIG
+        value: config/models.demo.toml
       # One process: the worker runs inside the API (free instance has 512 MB).
       - key: EMBEDDED_WORKER
         value: "true"

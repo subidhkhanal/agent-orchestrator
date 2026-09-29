@@ -213,3 +213,14 @@ def test_coder_allowed_after_review_of_current_version() -> None:
     }
     state = make_state(sources=[SOURCE], artifacts=[memo(2)], review_notes=[verdict])
     assert enforce_invariants(state, "coder", GRAPH).next_node == "coder"
+
+
+def test_reviewer_before_any_draft_goes_to_the_coder() -> None:
+    state = make_state(sources=[SOURCE])
+    result = enforce_invariants(state, "reviewer", GRAPH)
+    assert result.next_node == "coder"
+    assert [o.guard for o in result.overrides] == ["reviewer_requires_draft"]
+
+
+def test_reviewer_before_any_source_chains_to_researcher() -> None:
+    assert enforce_invariants(make_state(), "reviewer", GRAPH).next_node == "researcher"
