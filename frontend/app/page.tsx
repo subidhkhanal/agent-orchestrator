@@ -29,7 +29,7 @@ export default function Home() {
   const [graphs, setGraphs] = useState<GraphInfo[]>([]);
   const [graphId, setGraphId] = useState("research-memo");
   const [task, setTask] = useState(EXAMPLES[0].task);
-  const [maxUsd, setMaxUsd] = useState(0.03);
+  const [maxUsd, setMaxUsd] = useState(0.08);
   const [maxTokens, setMaxTokens] = useState(80000);
   const [runId, setRunId] = useState<string | null>(null);
   const [events, setEvents] = useState<RunEvent[]>([]);

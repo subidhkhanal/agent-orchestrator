@@ -43,8 +43,9 @@ services:
         value: "true"
       - key: CORS_ORIGINS
         value: https://agent-orchestrator-opal.vercel.app
+      # Notional USD (list prices; the free Groq tier costs nothing). Room for fallback models.
       - key: DEMO_MAX_USD_PER_RUN
-        value: "0.03"
+        value: "0.10"
       - key: DAILY_USD_CAP
         value: "1.00"
       - key: DAILY_TOKEN_CAP
