@@ -42,9 +42,7 @@ def main() -> None:
     ]
 
     owner = client.get("/owners").json()[0]["owner"]["id"]
-    existing = [
-        s["service"] for s in client.get("/services", params={"name": spec["name"]}).json()
-    ]
+    existing = [s["service"] for s in client.get("/services", params={"name": spec["name"]}).json()]
     if existing:
         service = existing[0]
         client.put(f"/services/{service['id']}/env-vars", json=env_vars).raise_for_status()
