@@ -16,7 +16,7 @@ class Settings(BaseSettings):
 
     # Researcher services. Without a Tavily key the researcher uses canned web results.
     tavily_api_key: str | None = None
-    docqa_base_url: str | None = "https://d3kmysbupw.us-east-2.awsapprunner.com"
+    docqa_base_url: str | None = "https://document-qa-api.vercel.app"
 
     # Engine
     checkpoint_event_every_n: int = 5
