@@ -19,6 +19,7 @@ from orchestrator.effects.publisher import Publisher
 from orchestrator.engine.context import EngineDeps, EngineSettings
 from orchestrator.gateway.config import GatewayConfig
 from orchestrator.gateway.gateway import LLMGateway, LLMProvider
+from orchestrator.gateway.providers.anthropic_provider import AnthropicProvider
 from orchestrator.gateway.providers.demo_policy import ResearchMemoPolicy
 from orchestrator.gateway.providers.fake import FakeLLM
 from orchestrator.gateway.providers.openai_compatible import OpenAICompatibleProvider
@@ -75,6 +76,11 @@ def build_providers(config: GatewayConfig, settings: Settings) -> dict[str, LLMP
             providers[name] = FakeLLM(
                 name=name, policy=ResearchMemoPolicy(), delay_s=settings.fake_llm_delay_s
             )
+        elif provider.kind == "anthropic":
+            key = os.environ.get(provider.api_key_env or "ANTHROPIC_API_KEY")
+            if not key:
+                raise ValueError(f"{provider.api_key_env} is not set (provider {name!r})")
+            providers[name] = AnthropicProvider(name, key)
         elif provider.kind == "openai_compatible":
             if not provider.base_url or not provider.api_key_env:
                 raise ValueError(f"provider {name!r} needs base_url and api_key_env")
@@ -93,7 +99,7 @@ async def verify_models(config: GatewayConfig, providers: dict[str, LLMProvider]
     for tier_name, tier in config.tiers.items():
         for route in tier.routes():
             provider = providers[route.provider]
-            if isinstance(provider, OpenAICompatibleProvider):
+            if isinstance(provider, OpenAICompatibleProvider | AnthropicProvider):
                 available = await provider.list_models()
                 if route.model not in available:
                     missing.append(f"{tier_name}: {route.provider}/{route.model}")
