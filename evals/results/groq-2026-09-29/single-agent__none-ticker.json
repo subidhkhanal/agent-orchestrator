@@ -1,0 +1,29 @@
+{
+ "task_id": "none-ticker",
+ "category": "impossible",
+ "system": "single-agent",
+ "status": "failed",
+ "termination": null,
+ "wall_s": 0.05,
+ "usd": 0.0,
+ "tokens": 0,
+ "budget_exceeded": false,
+ "llm_calls": 0,
+ "rate_limit_waits": 0,
+ "node_latencies": [],
+ "routes_valid": 0,
+ "routes_invalid": 0,
+ "guard_overrides": {},
+ "sources": 0,
+ "claims": 0,
+ "supported_claims": 0,
+ "citation_validity": null,
+ "facts_found": null,
+ "judge": {
+  "error": "AllProvidersFailed('groq/openai/gpt-oss-120b: ProviderError(\"transport error: ConnectError(\\'[Errno 11001] getaddrinfo failed\\')\")')"
+ },
+ "memo": null,
+ "error": "AllProvidersFailed: groq/openai/gpt-oss-120b: ProviderError(\"transport error: ConnectError('[Errno 11001] getaddrinfo failed')\")",
+ "models_used": {},
+ "sources_brief": []
+}

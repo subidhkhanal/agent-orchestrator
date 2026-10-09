@@ -1,0 +1,151 @@
+{
+ "task_id": "both-per-diem-vs-gsa",
+ "category": "both",
+ "system": "research-memo",
+ "status": "completed",
+ "termination": "budget_exhausted",
+ "wall_s": 302.53,
+ "usd": 0.009863,
+ "tokens": 56849,
+ "budget_exceeded": false,
+ "llm_calls": 20,
+ "rate_limit_waits": 14,
+ "node_latencies": [
+  [
+   "supervisor",
+   615
+  ],
+  [
+   "researcher",
+   29979
+  ],
+  [
+   "supervisor",
+   754
+  ],
+  [
+   "coder",
+   7620
+  ],
+  [
+   "supervisor",
+   659
+  ],
+  [
+   "reviewer",
+   68999
+  ],
+  [
+   "supervisor",
+   757
+  ],
+  [
+   "coder",
+   170560
+  ],
+  [
+   "supervisor",
+   0
+  ],
+  [
+   "reviewer",
+   22562
+  ],
+  [
+   "supervisor",
+   0
+  ]
+ ],
+ "routes_valid": 4,
+ "routes_invalid": 0,
+ "guard_overrides": {
+  "reviewer_requires_draft": 1,
+  "budget_low": 2
+ },
+ "sources": 13,
+ "claims": 16,
+ "supported_claims": 8,
+ "citation_validity": 0.5,
+ "facts_found": true,
+ "judge": {
+  "task_success": false,
+  "score": 2,
+  "unsupported_claims": 1,
+  "correct_abstention": null,
+  "rationale": "Most claims are supported by cited snippets, but the statement that the GSA Per\u2011Diem Look\u2011Up tool updates monthly is not backed by the provided source snippet.",
+  "judge_usd": 0.000576
+ },
+ "memo": "## Memo: Comparison of Northwind Labs\u2019 International Meal Per\u2011Diem with U.S. Government Foreign Per\u2011Diem Practices\n\n---\n\n### Northwind Labs Policy\n- **International daily meal allowance:** **$95 USD** per day\u202f[doc_af5bb708]\n- **Lodging cap:** $275 per night in major cities; $180 per night elsewhere (policy note, same source)\u202f[doc_af5bb708]\n\n### U.S. Government Foreign Per\u2011Diem System\n- **Authority:** The Secretary of State, via the Office of Allowances, establishes maximum foreign per\u2011diem rates each month for all U.S. government employees and contractors\u202f[src_0511f010]\n- **Rate composition:** Published separately for **lodging** and **Meals & Incidental Expenses (M&IE)**\u202f[src_d3617eae]\n- **Methodology:** Rates are derived from **average daily rate (ADR) data** supplied by the hospitality industry. The ADR reflects the average price a traveler would pay for a hotel room (room\u2011sales revenue \u00f7 number of rooms sold). The government uses these ADR figures to set the lodging portion and adds a statutory percentage (typically **10\u202f% of the combined lodging and meal costs**) to cover incidental expenses\u202f[src_d54d4302]\n- **Tools & updates:** The **GSA Per\u2011Diem Look\u2011Up** tool lets travelers select a city and view published lodging and M&IE rates, which are updated **monthly**\u202f[src_3c87d71a]\n\n### Key Differences\n| Aspect | Northwind Labs | U.S. Government |\n|--------|----------------|-----------------|\n| **Rate basis** | Fixed flat amount ($95) for all international trips | Location\u2011specific rates derived from industry ADR data; rates vary by city/country |\n| **Components** | Single \u201cmeal per diem\u201d amount; lodging capped separately | Separate lodging and M&IE components; incidental expenses calculated as 10\u202f% of combined cost |\n| **Update frequency** | No published schedule; appears static in policy | Updated **monthly** by the Secretary of State/Office of Allowances |\n| **Regulatory source** | Internal corporate policy | Federal Travel Regulations (Chapter\u202f301\u20117) and State Department Office of Allowances |\n\n### Implications for Northwind Labs\n- The flat $95 meal allowance may **over\u2011pay** employees traveling to low\u2011cost locations and **under\u2011pay** those in high\u2011cost cities, unlike the government\u2019s location\u2011adjusted approach.\n- Adopting a methodology that references local ADR data (e.g., using the GSA per\u2011diem lookup as a model) could produce a more **equitable** and **fiscally responsible** meal allowance structure.\n- Consider separating lodging and meal components and updating rates **regularly** (e.g., quarterly) to reflect market changes.\n\n---\n\n### Sources\n- Northwind Labs International Meal Per\u2011Diem: $95\u202fUSD\u202f[doc_af5bb708]\n- State Department foreign per\u2011diem authority & publication: Secretary of State, Office of Allowances\u202f[src_0511f010]\n- Per\u2011diem tables by location (lodging & M&IE)\u202f[src_d3617eae]\n- Methodology based on industry ADR data and 10\u202f% incidental factor\u202f[src_d54d4302]\n- GSA Per\u2011Diem Look\u2011Up tool (monthly updates)\u202f[src_3c87d71a]",
+ "error": null,
+ "models_used": {
+  "openai/gpt-oss-20b": 4,
+  "openai/gpt-oss-120b": 16
+ },
+ "sources_brief": [
+  {
+   "id": "doc_af5bb708",
+   "title": "Northwind_Travel_and_Expense_Policy.md - Per Diem and Hotels",
+   "snippet": "## Northwind Labs Travel and Expense Policy > Per Diem and Hotels\n\n| Item | Domestic | International |\n|---|---|---|\n| Daily meal per diem | 65 USD | 95 USD |\n\nHotel stays are capped at 275 USD per night in major cities and 180 USD per night elsewhere.\nBook hotels through the corporate travel portal"
+  },
+  {
+   "id": "doc_9903c1d5",
+   "title": "Northwind_Travel_and_Expense_Policy.md - Expenses",
+   "snippet": "## Northwind Labs Travel and Expense Policy > Expenses\n\nUse the corporate Amex card for travel costs. Receipts are required for every expense above 25 USD.\nPersonal car mileage is reimbursed at 0.67 USD per mile.\nSubmit expense reports within 30 days of returning from a trip."
+  },
+  {
+   "id": "doc_60da7648",
+   "title": "Northwind_Engineering_Onboarding.md - On-Call",
+   "snippet": "## Northwind Labs Engineering Onboarding > On-Call\n\nThe on-call rotation is weekly and hands over on Mondays at 10:00 UTC. Pages are routed through PagerDuty.\nEngineers receive an on-call stipend of 400 USD per week on call. SEV1 incidents require acknowledgement within 5 minutes."
+  },
+  {
+   "id": "src_3c87d71a",
+   "title": "M&IE breakdowns | GSA",
+   "snippet": "GSA.gov\n\nAn official website of the U.S. General Services Administration\n\n## PER DIEM LOOK-UP\n\n### 1 Choose a location\n\nError, The Per Diem API is not responding. Please try again later.\n\nNo results could be found for the location you've entered.\n\nRates for Alaska, Hawaii, and U.S. territories and p"
+  },
+  {
+   "id": "src_53448be1",
+   "title": "International Per Diem Rates For 2026: A Complete Guide",
+   "snippet": "Domestic per diem rates, such as those set by the U.S. General Services Administration (GSA), differ from international rates. The U.S. State Department sets foreign per diem allowances, which are typically higher to reflect differences in cost of living, lodging prices, and local expenses outside t"
+  },
+  {
+   "id": "src_c68342fe",
+   "title": "Per Diem  | Defense Travel Management Office",
+   "snippet": "Per diem is a set allowance for lodging, meal and incidental costs incurred while on official government travel. Calculation of travel per diem rates within the Federal government is a shared responsibility of the General Services Administration (GSA), the Department of State (DoS), and the Defense "
+  },
+  {
+   "id": "src_62eadb19",
+   "title": "Per diem rates | GSA",
+   "snippet": "An official website of the United States government\n\nHere\u2019s how you know\n\nOfficial websites use .gov    \n A .gov website belongs to an official government organization in the United States.\n\nSecure .gov websites use HTTPS    \n A lock ( ) or  means you\u2019ve safely connected to the .gov website. Share s"
+  },
+  {
+   "id": "src_d3617eae",
+   "title": "Department of State - Foreign Per Diem Rates by Location",
+   "snippet": "| description | Foreign Per Diem rates are established monthly by the Office of Allowances as maximum U.S. dollar rates for reimbursement of U.S. Government civilians traveling on official business in foreign areas. Lodging and M&IE (Meals & Incidental Expenses) are reported separately followed by a"
+  },
+  {
+   "id": "src_ea0e2206",
+   "title": "Department of State - Foreign Per Diem Rates by Location",
+   "snippet": "| description | Foreign Per Diem rates are established monthly by the Office of Allowances as maximum U.S. dollar rates for reimbursement of U.S. Government civilians traveling on official business in foreign areas. Lodging and M&IE (Meals & Incidental Expenses) are reported separately followed by a"
+  },
+  {
+   "id": "src_0511f010",
+   "title": "Foreign Per Diem Rates",
+   "snippet": "Establishing Per Diem Rates:  Maximum rates of per diem allowances for travel in foreign areas are established by the Secretary of State and apply to all U.S. Government employees and contractors. For regulations pertaining to these rates, see the Federal Travel Regulations, Chapter 301-7, as establ"
+  },
+  {
+   "id": "src_560a0ac6",
+   "title": "March 2000 Foreign Per Diem Rates",
+   "snippet": "meal costs plus an additional amount, equal to 10% of the combined lodging and meal costs, to cover incidental travel expenses.  Requests for Per Diem Revisions: In order for the Department of State to maintain appropriate travel per diem rates in foreign areas, employees of the Federal Government w"
+  },
+  {
+   "id": "src_b5279ef9",
+   "title": "DSSR Per Diem API | State Department Foreign Per Diem Rates in JSON",
+   "snippet": "The DSSR Per Diem API from Allowances API gives developers structured JSON access to the foreign per diem rates established by the State Department's Office of Allowances under the Department of State Standardized Regulations (DSSR). Instead of scraping the allowances website or copying rate tables "
+  },
+  {
+   "id": "src_d54d4302",
+   "title": "Frequently asked questions, per diem | GSA",
+   "snippet": "Per diem rates are set based upon contractor-provided average daily rate (ADR) data of local lodging properties. The properties must be fire-safe and have a FEMA ID number. The ADR is a travel industry metric that divides room sales rental revenue by the number of rooms sold. All rates are evaluated"
+  }
+ ]
+}

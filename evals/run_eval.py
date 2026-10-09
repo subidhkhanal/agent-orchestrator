@@ -63,9 +63,9 @@ from orchestrator.tools import default_registry as default_tools  # noqa: E402
 
 RESULTS = ROOT / "evals" / "results"
 SYSTEMS = ("research-memo", "single-agent")
-BUDGET_TOKENS = 60_000
-BUDGET_USD = 0.05
-DEADLINE_S = 900
+BUDGET_TOKENS = 600_000  # includes cache reads (tool loops resend the history)
+BUDGET_USD = 1.50  # same cap for both systems
+DEADLINE_S = 1800
 
 JUDGE_SYSTEM = """\
 You grade research memos written by an AI system. Be strict and literal.
@@ -326,7 +326,7 @@ class Harness:
             },
             indent=1,
         )
-        ledger = BudgetLedger(tokens_available=40_000, usd_available=0.05, deadline_at=None)
+        ledger = BudgetLedger(tokens_available=60_000, usd_available=0.30, deadline_at=None)
 
         async def no_events(*_: Any) -> None:
             return None
