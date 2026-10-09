@@ -30,6 +30,9 @@ class Message(BaseModel):
     content: str
     tool_calls: tuple[ToolCall, ...] = ()
     tool_call_id: str | None = None
+    # Provider-native content blocks of an assistant turn (e.g. Claude's thinking + tool_use
+    # blocks), replayed unchanged to the provider that produced them.
+    raw_content: tuple[dict[str, Any], ...] | None = None
 
 
 class LLMRequest(BaseModel):
@@ -47,12 +50,19 @@ class LLMRequest(BaseModel):
 class Usage(BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    input_tokens: int = Field(ge=0)
+    input_tokens: int = Field(ge=0)  # uncached input
     output_tokens: int = Field(ge=0)
+    cache_read_tokens: int = Field(default=0, ge=0)
+    cache_write_tokens: int = Field(default=0, ge=0)
 
     @property
     def total(self) -> int:
-        return self.input_tokens + self.output_tokens
+        return (
+            self.input_tokens
+            + self.output_tokens
+            + self.cache_read_tokens
+            + self.cache_write_tokens
+        )
 
 
 class LLMResponse(BaseModel):
@@ -63,6 +73,7 @@ class LLMResponse(BaseModel):
     usage: Usage
     model: str
     provider: str
+    raw_content: tuple[dict[str, Any], ...] | None = None
 
 
 class ProviderError(Exception):

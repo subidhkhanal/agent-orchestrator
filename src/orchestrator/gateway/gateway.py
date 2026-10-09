@@ -178,6 +178,8 @@ class LLMGateway:
                     "status": "ok",
                     "input_tokens": response.usage.input_tokens,
                     "output_tokens": response.usage.output_tokens,
+                    "cache_read_tokens": response.usage.cache_read_tokens,
+                    "cache_write_tokens": response.usage.cache_write_tokens,
                     "usd": usd,
                     "latency_ms": self._elapsed_ms(started),
                     "granted_max_tokens": max_tokens,

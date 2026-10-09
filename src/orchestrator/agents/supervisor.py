@@ -155,7 +155,9 @@ async def supervisor_node(state: RunState, ctx: NodeContext) -> NodeOutput:
                 {"attempt": attempt, "error": str(exc), "raw": response.content[:500]},
             )
             messages += [
-                Message(role="assistant", content=response.content),
+                Message(
+                    role="assistant", content=response.content, raw_content=response.raw_content
+                ),
                 Message(
                     role="user",
                     content=f"Your routing output was invalid: {exc}. "

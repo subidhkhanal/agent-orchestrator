@@ -73,6 +73,10 @@ async def run_tool_loop(
     """`stop_after`: end the loop right after one of these tools succeeds (its job is done).
     `seed`: state and ops already produced by code before the model runs."""
     router = ctx.deps.tools.router_for(role)
+    # Shortening old tool results only exists for providers with a small per-request limit.
+    # Elsewhere the history must stay append-only: Claude's thinking blocks are only valid
+    # when the earlier turns are replayed unchanged.
+    compaction = ctx.deps.gateway.config.tier_for(role).max_request_tokens is not None
     result = seed or LoopResult(state=state)
     state = result.state
     messages: list[Message] = [
@@ -82,7 +86,7 @@ async def run_tool_loop(
     for round_ in range(max_rounds or ctx.deps.settings.max_tool_rounds):
         request = LLMRequest(
             node=role,
-            messages=compact(messages),
+            messages=compact(messages) if compaction else tuple(messages),
             tools=router.specs(),
             metadata={"view": state_view(result.state), "round": round_, "role": role},
         )
@@ -96,7 +100,12 @@ async def run_tool_loop(
             return result
 
         messages.append(
-            Message(role="assistant", content=response.content, tool_calls=response.tool_calls)
+            Message(
+                role="assistant",
+                content=response.content,
+                tool_calls=response.tool_calls,
+                raw_content=response.raw_content,
+            )
         )
         for call in response.tool_calls:
             outcome = await router.invoke(call, ctx.tool_context(result.state))

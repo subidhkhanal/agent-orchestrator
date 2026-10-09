@@ -87,7 +87,12 @@ class BudgetLedger:
         return granted
 
     def charge(self, usage: Usage, price: Price) -> float:
-        usd = price.cost(usage.input_tokens, usage.output_tokens)
+        usd = price.cost(
+            usage.input_tokens,
+            usage.output_tokens,
+            usage.cache_read_tokens,
+            usage.cache_write_tokens,
+        )
         self.tokens_used += usage.total
         self.usd_used += usd
         return usd

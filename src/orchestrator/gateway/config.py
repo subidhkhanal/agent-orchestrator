@@ -48,8 +48,24 @@ class Price(_Cfg):
     input_per_mtok: float = Field(ge=0)
     output_per_mtok: float = Field(ge=0)
 
-    def cost(self, input_tokens: int, output_tokens: int) -> float:
-        return (input_tokens * self.input_per_mtok + output_tokens * self.output_per_mtok) / 1e6
+    # Prompt-cache multipliers on the input price (Anthropic: reads 0.1x, 5-minute writes 1.25x).
+    cache_read_factor: float = Field(default=0.1, ge=0)
+    cache_write_factor: float = Field(default=1.25, ge=0)
+
+    def cost(
+        self,
+        input_tokens: int,
+        output_tokens: int,
+        cache_read_tokens: int = 0,
+        cache_write_tokens: int = 0,
+    ) -> float:
+        cached = (
+            cache_read_tokens * self.cache_read_factor
+            + cache_write_tokens * self.cache_write_factor
+        )
+        return (
+            (input_tokens + cached) * self.input_per_mtok + output_tokens * self.output_per_mtok
+        ) / 1e6
 
 
 class RetryConfig(_Cfg):
