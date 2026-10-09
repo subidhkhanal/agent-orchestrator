@@ -82,3 +82,18 @@ A live demo run showed two prompt-level rules failing with a fast model on a fre
   router, before the model starts.
 The coder's turn also ends as soon as it saves a draft. Each case has a regression test that
 reproduces the live behavior with the fake model.
+
+## Amendment (2026-10-09): the citation check and the prompt disagreed on "Open questions"
+
+A live run on Claude Opus 5.5 looped on one version until the step cap. The writer is told to
+list what the sources do not cover under `## Open questions`; those lines have nothing to cite.
+The code backstop in the reviewer node flagged every uncited line, including those, so it
+overruled the model's "pass" on every review, and the supervisor sent the unchanged version
+back to the reviewer seven times. Earlier runs had the writer cite six documents on each
+"not found" line to satisfy the check, which made the memos worse. Two fixes:
+- `check_memo()` treats lines under an "Open questions" heading as a list of unknowns, not
+  claims. Policy checks (emails, phone numbers) still apply to them, and the model reviewer
+  still reads them. The prompts for the writer and reviewer state the same rule.
+- New route guard `review_once_per_version`: a version that already has a verdict is not
+  reviewed again. It goes to the writer if changes were requested, and towards approval if it
+  passed. Re-reviewing unchanged text cannot change the outcome; it only spends budget.

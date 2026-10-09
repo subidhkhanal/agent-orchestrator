@@ -67,6 +67,7 @@ flowchart TD
 Dotted edges are chosen at runtime. The supervisor's choice first passes the code guards:
 - `publish` needs a human approval of the *current* artifact version;
 - the coder needs at least one source (except code-only tasks);
+- a draft is reviewed before it is rewritten, and each version is reviewed only once;
 - below 10% of the budget, the run gets a final reviewer summary and ends;
 - at zero budget, it ends with the partial artifact;
 - a max-steps cap.
@@ -205,7 +206,7 @@ Then:
 
 ```bash
 alembic upgrade head
-pytest                                         # 152 tests; Postgres tests skip without TEST_DATABASE_URL
+pytest                                         # 156 tests; Postgres tests skip without TEST_DATABASE_URL
 python scripts/demo_offline.py --reject-first  # full run in-process, fake LLM, no services needed
 
 # Full stack (fake LLM, no keys needed):
