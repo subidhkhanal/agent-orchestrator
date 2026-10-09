@@ -35,7 +35,7 @@ flowchart LR
       G --> GU["Code guards<br/>(invariants)"]
       G --> EL["Effect ledger"]
     end
-    GW --> LLM["Groq<br/>gpt-oss-20b / 120b"]
+    GW --> LLM["Claude API<br/>Opus 5.5 workers · Haiku 5.5 routing"]
     TR --> WEB["Tavily web search"]
     TR --> RAG["Document Q&A (RAG)<br/>platform API"]
     EL -- "Idempotency-Key" --> SINK["Publish sink<br/>(in-app feed)"]
@@ -137,7 +137,8 @@ Results are in `evals/results/chaos-seed*.json`. What these numbers do and do no
 
 ### Evaluation: Graph A vs single-agent baseline
 
-**Status: full eval running (started 2026-09-29); results pending.**
+**Status: incomplete; no results are claimed.** A full run was started on Groq's free tier
+(`config/models.groq.toml`) on 2026-09-29 and stopped when the demo moved to Claude.
 
 `evals/run_eval.py` runs each task in `evals/tasks.jsonl` (30 tasks: 10 answerable from the
 Document Q&A platform, 8 needing web search, 6 needing both, and 6 impossible or adversarial)
@@ -151,9 +152,9 @@ through Graph A and the single-agent baseline. Both get the same tools and the s
 
 It also writes a spot-check file for manual review.
 
-What limits the full run is API quota, not code. The free Groq tier allows about 200k tokens
+On Groq's free tier, what limited the full run was API quota, not code: about 200k tokens
 per model per day, and a run uses about 50-60k tokens, mostly on `gpt-oss-120b`. The eval
-therefore runs with `--resume --wait-for-quota`:
+therefore ran with `--resume --wait-for-quota`:
 - when the daily quota runs out it pauses until the reset instead of recording a failure;
 - a run cut off by the quota is discarded and redone later;
 - tasks are interleaved across categories, so partial results stay balanced.
@@ -204,7 +205,7 @@ Then:
 
 ```bash
 alembic upgrade head
-pytest                                         # 147 tests; Postgres tests skip without TEST_DATABASE_URL
+pytest                                         # 152 tests; Postgres tests skip without TEST_DATABASE_URL
 python scripts/demo_offline.py --reject-first  # full run in-process, fake LLM, no services needed
 
 # Full stack (fake LLM, no keys needed):
@@ -214,9 +215,10 @@ python scripts/e2e_smoke.py --api http://localhost:8000
 cd frontend && npm install && npm run dev        # http://localhost:3000
 ```
 
-Real models: put `GROQ_API_KEY` (and optionally `TAVILY_API_KEY`) in `.env` and drop
-`FAKE_LLM`. `python -m orchestrator.worker` refuses to start if a model configured in
-`config/models.toml` is not in the provider's live model list.
+Real models: put `ANTHROPIC_API_KEY` (and optionally `TAVILY_API_KEY`) in `.env` and drop
+`FAKE_LLM`. `config/models.groq.toml` (set `MODELS_CONFIG`, needs `GROQ_API_KEY`) runs the
+same graph on Groq's OpenAI-compatible API instead. `python -m orchestrator.worker` refuses to
+start if a configured model is not in the provider's live model list.
 
 Useful scripts: `scripts/chaos.py` (reliability), `evals/run_eval.py` (evaluation;
 `--fake` for an offline smoke test), and `python -m orchestrator.cli create-tenant/create-key`.
@@ -256,14 +258,15 @@ Errors are `{"error": {"code", "message"}}`:
 ## Limitations
 
 - **Evaluation results are pending** (see above). No quality claim is made yet.
-- **Free-tier demo.** The live demo (Vercel + Render + Neon, all free tiers; see
-  [docs/deploy.md](docs/deploy.md)) shares Groq's free daily token quota. When it is used up,
-  runs are rate-limited and the budget guard ends them early with a partial result.
+- **Capped paid demo.** The live demo (Vercel + Render + Neon on free tiers; see
+  [docs/deploy.md](docs/deploy.md)) calls the paid Claude API, capped at $1.50 per run and
+  $4.00 per day. Once the daily cap is reached, new runs get 503 until the next day.
 - **Zombie checkpoint window.** Our own tables are fenced by the lease generation, but
   LangGraph's checkpoint writes are not. A paused worker that lost its lease could write one
   extra checkpoint before its next fenced write fails (ADR 0001).
-- **Single provider.** The primary and fallback models are both on Groq, so a Groq outage
-  stops runs. Adding a second provider is a config change.
+- **Single provider.** The primary and fallback models are both on the Claude API, so the
+  fallback covers a model-level failure, not an API-wide outage. Adding a second provider is a
+  config change (an OpenAI-compatible provider is already implemented).
 - **In-memory rate limiter.** The demo's per-client limit lives in API process memory, so it
   is correct for one API instance only.
 - **Re-executed nodes cost tokens twice.** A node interrupted by a crash re-runs its LLM

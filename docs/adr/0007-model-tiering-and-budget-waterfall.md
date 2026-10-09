@@ -122,3 +122,28 @@ sees source titles only (routing does not need the text); state views list at mo
 sources; tool loops shorten tool results older than the last three ("context compaction");
 search tools accept any `max_results`/`top_k` but clamp to 5 in code (liberal in what they
 accept, strict in what they do).
+
+## Amendment (2026-10-09): the demo moves to the Claude API
+
+- Provider: the Claude API through the official `anthropic` SDK
+  (`gateway/providers/anthropic_provider.py`). The Groq configuration is kept as
+  `config/models.groq.toml`; switching back is a `MODELS_CONFIG` change.
+- Tiers, verified against the key's live model list on 2026-10-09:
+  - `fast` (supervisor): `claude-haiku-5-5`, fallback `claude-sonnet-5-5` (effort low);
+  - `strong` (workers, judge): `claude-opus-5-5` at effort `medium`, with server-side refusal
+    fallbacks, and `claude-sonnet-5-5` as the gateway's fallback route.
+  `verify_models()` caught the first draft's `claude-haiku-4-5`, which this key does not offer.
+- Prices from Anthropic's pricing page on the same date. Usage now has cache-read and
+  cache-write tokens, priced per model (cache writes 1.25x input; cache reads 0.1x, or 0.05x on
+  Opus 5.5 and Sonnet 5.5). Haiku 5.5 costs more above a 100k-token prompt; supervisor
+  prompts stay far below that.
+- Claude's thinking blocks are only valid when the earlier turns are replayed unchanged, so
+  assistant turns keep their raw content blocks and tool loops stay append-only: context
+  compaction (M4 amendment) now runs only on tiers that set `max_request_tokens`. Automatic
+  prompt caching makes the re-sent history cheap.
+- A response that stops at `max_tokens` before producing text or a tool call is treated as
+  invalid model output and resampled; `stop_reason = "refusal"` (after the server-side
+  fallbacks) is a provider error, so the gateway's fallback route takes over.
+- Measured on one real task: $0.24 and 62k tokens to the approval gate. The demo's per-run cap
+  is $1.50, which covers a reject, rewrite and second review.
+
