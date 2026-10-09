@@ -182,6 +182,13 @@ async def test_demo_mode_limits(api: Any) -> None:
     assert capped.status_code == 503 and int(capped.headers["Retry-After"]) > 0
     assert (await create(client, anon, "d2", ok)).status_code == 200  # replays still work
 
+    # A finished run only counts what it spent: cancelling a queued run (spent $0) frees its
+    # reservation for the next visitor.
+    first = (await create(client, anon, "d2", ok)).json()["run_id"]
+    assert (await client.post(f"/api/v1/graph-runs/{first}/cancel")).status_code == 202
+    assert (await client.get(f"/api/v1/graph-runs/{first}")).json()["status"] == "CANCELLED"
+    assert (await create(client, anon, "d5", ok)).status_code == 201
+
 
 async def test_publish_sink_endpoint_honors_idempotency_keys(api: Any) -> None:
     client, _, _ = api

@@ -28,7 +28,9 @@ How the free tiers are handled:
   month; the worker is woken in-process instead of polling (`WORKER_POLL_S=900`), idle
   connections close after 60 s, and the SSE listener only connects while someone watches a run.
 - The Claude API is paid, so the demo has hard caps: $1.50 and 600k tokens per run, $4.00 and
-  8M tokens per day (new runs get 503 once reached), and 10 runs per hour per IP.
+  8M tokens per day (new runs get 503 once reached), and 10 runs per hour per IP. Against the
+  daily cap, a run that can still spend counts its whole limit and a finished run counts what
+  it actually spent, so the cap bounds the worst case without idle reservations.
 
 ## What changed from the original plan
 

@@ -411,25 +411,26 @@ class RunStore:
             row = await (await conn.execute(query, params)).fetchone()
         return float(row["spent"]) if row else 0.0
 
-    async def reserved_tokens_since(self, since: datetime) -> int:
+    # Daily caps: a run that can still spend reserves its whole limit; a finished run counts
+    # only what it spent (its cached state is final). The cap therefore still bounds the worst
+    # case, without finished runs holding budget they never used.
+    _RESERVED_SQL = (
+        "SELECT COALESCE(SUM(CASE WHEN status = ANY(%s) "
+        "THEN (state->'budget'->>'{limit}')::numeric - (state->'budget'->>'{remaining}')::numeric "
+        "ELSE (budget->>'{limit}')::numeric END), 0) AS reserved "
+        "FROM graph_runs WHERE created_at >= %s"
+    )
+
+    async def _reserved_since(self, since: datetime, limit: str, remaining: str) -> float:
+        query = self._RESERVED_SQL.format(limit=limit, remaining=remaining)
         async with self._pool.connection() as conn:
-            row = await (
-                await conn.execute(
-                    "SELECT COALESCE(SUM((budget->>'token_limit')::bigint), 0) AS reserved "
-                    "FROM graph_runs WHERE created_at >= %s",
-                    (since,),
-                )
-            ).fetchone()
-        return int(row["reserved"]) if row else 0
+            row = await (await conn.execute(query, ([str(t) for t in TERMINAL], since))).fetchone()
+        return float(row["reserved"]) if row else 0.0
+
+    async def reserved_tokens_since(self, since: datetime) -> int:
+        """Tokens spent by finished runs plus the token limits of runs that can still spend."""
+        return int(await self._reserved_since(since, "token_limit", "tokens_remaining"))
 
     async def reserved_usd_since(self, since: datetime) -> float:
-        """Sum of the USD *limits* of runs created since `since`: the most they could spend."""
-        async with self._pool.connection() as conn:
-            row = await (
-                await conn.execute(
-                    "SELECT COALESCE(SUM((budget->>'usd_limit')::numeric), 0) AS reserved "
-                    "FROM graph_runs WHERE created_at >= %s",
-                    (since,),
-                )
-            ).fetchone()
-        return float(row["reserved"]) if row else 0.0
+        """USD spent by finished runs plus the USD limits of runs that can still spend."""
+        return await self._reserved_since(since, "usd_limit", "usd_remaining")
