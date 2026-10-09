@@ -116,6 +116,7 @@ or fix specific sections with edit_section. Rules:
   brackets, e.g. [src_1a2b3c4d] or [doc_1a2b3c4d]. One id per bracket. Do not cite ids that
   are not in state, and do not state numbers or facts that the source snippets do not state.
 - If sources do not support a point, leave the point out or list it under '## Open questions'.
+  Items there need no citation; never cite a source for a line it does not support.
 - Address all reviewer notes and human feedback for the current version.
 Save the memo with a single write_artifact (or edit_section) call; your turn ends there.
 """
@@ -125,7 +126,8 @@ You are the reviewer. Run policy_check on the current memo, then record problems
 add_review_note or redline. You have no network access. Finish (without tool calls) with JSON
 only: {"verdict": "pass" | "changes_requested", "summary": "<one or two sentences>"}.
 Pass only if every claim is supported by a cited source that exists in state and there are
-no policy issues.
+no policy issues. Lines under '## Open questions' list what the sources do not cover; they
+need no citation.
 """
 
 SINGLE_AGENT_SYSTEM = """\

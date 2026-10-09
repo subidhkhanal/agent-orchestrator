@@ -5,7 +5,9 @@ its verdict, and later by the eval harness to measure citation validity.
 
 Convention: a claim cites sources inline with markers like ``[src_1a2b3c4d]`` (web) or
 ``[doc_1a2b3c4d]`` (RAG documents). A claim is any non-heading line with at least
-MIN_CLAIM_WORDS words.
+MIN_CLAIM_WORDS words, except lines under an "Open questions" heading: the writer is told to
+list what the sources do not cover there, so those lines have nothing to cite. Policy checks
+(emails, phone numbers) still apply to every line.
 """
 
 from __future__ import annotations
@@ -18,6 +20,8 @@ CITATION_RE = re.compile(r"\[((?:src|doc)_[0-9a-f]{6,})\]")
 EMAIL_RE = re.compile(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b")
 PHONE_RE = re.compile(r"(?<!\w)(?:\+?\d[\d\s().-]{8,}\d)(?!\w)")
 MIN_CLAIM_WORDS = 8
+HEADING_RE = re.compile(r"^\s*#+\s*(.*)$")
+UNCITED_SECTION_RE = re.compile(r"^open questions\b", re.IGNORECASE)
 
 
 _ID = r"(?:src|doc)_[0-9a-f]{6,}"
@@ -76,7 +80,11 @@ def _is_claim(line: str) -> bool:
 def check_memo(content: str, known_source_ids: set[str]) -> CitationReport:
     findings: list[Finding] = []
     claims = supported = 0
+    in_open_questions = False
     for number, line in enumerate(content.splitlines(), start=1):
+        heading = HEADING_RE.match(line)
+        if heading:
+            in_open_questions = bool(UNCITED_SECTION_RE.match(heading.group(1).strip()))
         for match in EMAIL_RE.finditer(line):
             findings.append(
                 Finding("policy", number, line, f"contains an email address {match.group()!r}")
@@ -85,7 +93,7 @@ def check_memo(content: str, known_source_ids: set[str]) -> CitationReport:
             findings.append(
                 Finding("policy", number, line, "contains what looks like a phone number")
             )
-        if not _is_claim(line):
+        if in_open_questions or not _is_claim(line):
             continue
         claims += 1
         cited = CITATION_RE.findall(line)

@@ -46,3 +46,19 @@ def test_model_native_citation_styles_are_normalized() -> None:
     # Normalizing syntax never makes an unknown id valid.
     report = check_memo(normalize_citations("- " + "word " * 8 + "【src_deadbeef】"), KNOWN)
     assert [f.kind for f in report.findings] == ["unknown_source"]
+
+
+def test_open_questions_need_no_citation_but_still_get_policy_checks() -> None:
+    memo = (
+        "## Findings\n"
+        "- Primary caregivers receive eighteen weeks of fully paid leave [doc_9f8e7d6c]\n"
+        "## Open questions\n"
+        "The available sources do not document any of the following items at all:\n"
+        "- How much notice employees must give before their parental leave starts.\n"
+        "- Ask the benefits team at hr.team@example.com about eligibility rules.\n"
+        "## Next steps\n"
+        "- Analysts widely expect this policy to change sharply over the next decade.\n"
+    )
+    report = check_memo(memo, KNOWN)
+    assert [(f.kind, f.line) for f in report.findings] == [("policy", 6), ("unsupported_claim", 8)]
+    assert report.claims == 2 and report.supported_claims == 1
