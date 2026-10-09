@@ -13,12 +13,12 @@ services:
     envVars:
       - key: DATABASE_URL          # Neon *direct* (unpooled) connection string
         sync: false
-      - key: GROQ_API_KEY
+      - key: ANTHROPIC_API_KEY
         sync: false
       - key: TAVILY_API_KEY
         sync: false
-      - key: MODELS_CONFIG
-        value: config/models.demo.toml
+      - key: MODELS_CONFIG          # Claude: Opus 5.5 workers, Haiku 5.5 routing
+        value: config/models.toml
       # One process: the worker runs inside the API (free instance has 512 MB).
       - key: EMBEDDED_WORKER
         value: "true"
@@ -50,13 +50,16 @@ services:
         value: "true"
       - key: CORS_ORIGINS
         value: https://agent-orchestrator-opal.vercel.app
-      # Notional USD (list prices; the free Groq tier costs nothing). Room for fallback models.
+      # Real money on Claude: hard caps per run and per day for the public demo. A measured
+      # run reached the approval gate for $0.24; a reject -> rewrite -> review cycle adds ~$0.12.
       - key: DEMO_MAX_USD_PER_RUN
-        value: "0.10"
+        value: "1.50"
+      - key: DEMO_MAX_TOKENS_PER_RUN    # includes cache reads (tool loops resend history)
+        value: "600000"
       - key: DAILY_USD_CAP
-        value: "1.00"
+        value: "4.00"
       - key: DAILY_TOKEN_CAP
-        value: "400000"
+        value: "8000000"
       - key: RATE_LIMIT_RUNS_PER_HOUR
         value: "10"
       - key: MAX_TASK_CHARS

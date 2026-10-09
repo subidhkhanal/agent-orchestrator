@@ -2,8 +2,9 @@
 
     python scripts/render_deploy.py
 
-Secrets come from the local .env (DEPLOY_DATABASE_URL, GROQ_API_KEY, TAVILY_API_KEY) and are sent
-only to Render's API. Non-secret settings come from render.yaml, so there is one source of truth.
+Secrets come from the local .env (DEPLOY_DATABASE_URL, ANTHROPIC_API_KEY, TAVILY_API_KEY) and
+are sent only to Render's API. Non-secret settings come from render.yaml, so there is one
+source of truth.
 """
 
 from __future__ import annotations
@@ -30,7 +31,7 @@ def main() -> None:
     spec = yaml.safe_load((ROOT / "render.yaml").read_text())["services"][0]
     secrets = {
         "DATABASE_URL": env.get("DEPLOY_DATABASE_URL"),
-        "GROQ_API_KEY": env.get("GROQ_API_KEY"),
+        "ANTHROPIC_API_KEY": env.get("ANTHROPIC_API_KEY"),
         "TAVILY_API_KEY": env.get("TAVILY_API_KEY"),
     }
     missing = [k for k, v in secrets.items() if not v]

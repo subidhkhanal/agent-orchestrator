@@ -29,8 +29,8 @@ export default function Home() {
   const [graphs, setGraphs] = useState<GraphInfo[]>([]);
   const [graphId, setGraphId] = useState("research-memo");
   const [task, setTask] = useState(EXAMPLES[0].task);
-  const [maxUsd, setMaxUsd] = useState(0.08);
-  const [maxTokens, setMaxTokens] = useState(80000);
+  const [maxUsd, setMaxUsd] = useState(1.0);
+  const [maxTokens, setMaxTokens] = useState(500000);
   const [runId, setRunId] = useState<string | null>(null);
   const [events, setEvents] = useState<RunEvent[]>([]);
   const [streamStatus, setStreamStatus] = useState("idle");
@@ -186,11 +186,11 @@ export default function Home() {
         <div className="row">
           <label>
             Max USD
-            <input type="number" step="0.005" min="0.005" value={maxUsd} onChange={(e) => setMaxUsd(Number(e.target.value))} />
+            <input type="number" step="0.05" min="0.05" value={maxUsd} onChange={(e) => setMaxUsd(Number(e.target.value))} />
           </label>
           <label>
             Max tokens
-            <input type="number" step="1000" min="5000" value={maxTokens} onChange={(e) => setMaxTokens(Number(e.target.value))} />
+            <input type="number" step="10000" min="5000" value={maxTokens} onChange={(e) => setMaxTokens(Number(e.target.value))} />
           </label>
           <button className="primary" disabled={offline || busy || task.trim().length < 3} onClick={start}>
             Run

@@ -22,6 +22,8 @@ def main() -> None:
     parser.add_argument("--api", default="http://localhost:8000")
     parser.add_argument("--api-key", default="")
     parser.add_argument("--timeout", type=float, default=600)
+    parser.add_argument("--max-usd", type=float, default=0.03)
+    parser.add_argument("--max-tokens", type=int, default=80_000)
     args = parser.parse_args()
     headers = {"Authorization": f"Bearer {args.api_key}"} if args.api_key else {}
     client = httpx.Client(base_url=args.api.rstrip("/"), headers=headers, timeout=30)
@@ -29,7 +31,7 @@ def main() -> None:
     body = {
         "graph_id": "research-memo",
         "input": {"task": "Write a memo summarizing Northwind Labs' paid parental leave."},
-        "budget": {"max_usd": 0.03, "max_tokens": 80_000},
+        "budget": {"max_usd": args.max_usd, "max_tokens": args.max_tokens},
     }
     created = client.post(
         "/api/v1/graph-runs", json=body, headers={"Idempotency-Key": str(uuid.uuid4())}

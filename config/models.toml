@@ -1,81 +1,83 @@
-# LLM gateway configuration for real runs: model tiers per node, per-node caps, and prices.
+# LLM gateway configuration (Claude): model tiers per node, per-node caps, and prices.
 #
-# Model names are data, not code. `python scripts/check_models.py` compares every model here
-# with the provider's live model list, and workers run the same check at startup and refuse to
-# start if a configured model is gone (the failure mode that broke another project of mine).
+# Model names are data, not code. Workers call verify_models() at startup and refuse to start
+# if a configured model is not in the provider's live model list.
+# Model IDs: verified against the live model list. Prices: platform.claude.com pricing page,
+# checked 2026-10-09 (USD per 1M tokens).
+# The previous Groq configuration is kept in config/models.groq.toml.
 #
-# Verified on 2026-09-28 against GET https://api.groq.com/openai/v1/models.
-# Prices from https://console.groq.com/docs/models on the same date (USD per 1M tokens).
-#
-# Known limitation: primary and fallback are both on Groq, so the fallback covers a retired or
-# overloaded *model*, not a Groq-wide outage. A second provider is a config-only change: add a
-# [providers.x] block (any OpenAI-compatible API) and point a fallback route at it.
+# Tiering (ADR 0007): routing is a small, frequent decision -> Claude Haiku 5.5. Research,
+# writing, reviewing and judging -> Claude Opus 5.5 with adaptive thinking (always on for this
+# model) at effort "medium" (its default, set explicitly). Server-side refusal fallbacks are
+# enabled on Opus ("default" routing), so a rare safety decline is retried on another model
+# inside the same call instead of failing the node.
 
-# gpt-oss runs with reasoning_effort=low: far fewer hidden reasoning tokens, which matters
-# under free-tier per-request and per-day token limits.
+[providers.anthropic]
+kind = "anthropic"
+api_key_env = "ANTHROPIC_API_KEY"
 
-[providers.groq]
-kind = "openai_compatible"
-base_url = "https://api.groq.com/openai/v1"
-api_key_env = "GROQ_API_KEY"
+[tiers.fast]    # supervisor routing
+primary = { provider = "anthropic", model = "claude-haiku-5-5" }
+fallback = { provider = "anthropic", model = "claude-sonnet-5-5", params = { output_config = { effort = "low" } } }
+max_output_tokens = 2000
+timeout_s = 60.0
 
-[tiers.fast]    # supervisor routing: small, cheap, low latency
-primary = { provider = "groq", model = "openai/gpt-oss-20b", params = { reasoning_effort = "low" } }
-fallback = { provider = "groq", model = "qwen/qwen3.8-27b" }
-max_output_tokens = 1200       # gpt-oss spends part of its output on hidden reasoning
-timeout_s = 30.0
-max_request_tokens = 7500   # free tier: 8,000 tokens per minute, enforced per request
-
-[tiers.strong]  # workers: research synthesis, writing, reviewing
-primary = { provider = "groq", model = "openai/gpt-oss-120b", params = { reasoning_effort = "low" } }
-fallback = { provider = "groq", model = "qwen/qwen3.8-27b" }
-max_output_tokens = 3000
-timeout_s = 90.0
-max_request_tokens = 7500
+[tiers.strong]  # researcher, coder, reviewer, single-agent baseline, eval judge
+primary = { provider = "anthropic", model = "claude-opus-5-5", params = { output_config = { effort = "medium" }, betas = ["server-side-fallback-2026-07-01"], fallbacks = "default" } }
+fallback = { provider = "anthropic", model = "claude-sonnet-5-5", params = { output_config = { effort = "medium" } } }
+# Thinking tokens count toward max_tokens, so leave room beyond the visible answer.
+max_output_tokens = 16000
+timeout_s = 300.0
 
 [nodes.supervisor]
 tier = "fast"
-max_tokens_per_node = 8000
-max_usd_per_node = 0.005
+max_tokens_per_node = 40000
+max_usd_per_node = 0.05
 
 [nodes.researcher]
 tier = "strong"
-max_tokens_per_node = 40000
-max_usd_per_node = 0.03
+max_tokens_per_node = 200000
+max_usd_per_node = 0.60
 
 [nodes.coder]
 tier = "strong"
-max_tokens_per_node = 40000
-max_usd_per_node = 0.03
+max_tokens_per_node = 200000
+max_usd_per_node = 0.60
 
 [nodes.reviewer]
 tier = "strong"
-max_tokens_per_node = 30000
-max_usd_per_node = 0.02
+max_tokens_per_node = 200000
+max_usd_per_node = 0.50
 
 [nodes.single_agent]
 tier = "strong"
-max_tokens_per_node = 150000
-max_usd_per_node = 0.10
+max_tokens_per_node = 800000
+max_usd_per_node = 2.00
 
 [nodes.judge]            # eval harness only
 tier = "strong"
-max_tokens_per_node = 20000
-max_usd_per_node = 0.02
+max_tokens_per_node = 60000
+max_usd_per_node = 0.30
 
-[prices."openai/gpt-oss-20b"]
-input_per_mtok = 0.075
-output_per_mtok = 0.30
+# 5-minute cache writes cost 1.25x the input price; cache reads 0.1x (Price defaults), except
+# 0.05x on Opus 5.5 and Sonnet 5.5.
+# Haiku 5.5's price rises to $0.50/$2.50 above a 100k-token prompt; supervisor prompts stay far
+# below that (its node cap is 40k tokens), so the lower price applies.
+[prices.claude-haiku-5-5]
+input_per_mtok = 0.10
+output_per_mtok = 0.50
 
-[prices."openai/gpt-oss-120b"]
-input_per_mtok = 0.15
-output_per_mtok = 0.60
+[prices.claude-sonnet-5-5]
+input_per_mtok = 2.00
+output_per_mtok = 10.00
+cache_read_factor = 0.05
 
-[prices."qwen/qwen3.8-27b"]
-input_per_mtok = 0.80
-output_per_mtok = 4.00
+[prices.claude-opus-5-5]
+input_per_mtok = 4.00
+output_per_mtok = 20.00
+cache_read_factor = 0.05
 
 [retry]
-max_retries = 5
+max_retries = 4
 base_delay_s = 2.0
 max_delay_s = 30.0
