@@ -224,3 +224,41 @@ def test_reviewer_before_any_draft_goes_to_the_coder() -> None:
 
 def test_reviewer_before_any_source_chains_to_researcher() -> None:
     assert enforce_invariants(make_state(), "reviewer", GRAPH).next_node == "researcher"
+
+
+# --- review once per version (found on a live run: reviewer re-reviewed v4 until max_steps) ---
+
+
+def verdict_note(version: int, verdict: str) -> dict[str, Any]:
+    return {
+        "id": f"n{version}",
+        "author": "reviewer",
+        "kind": "verdict",
+        "verdict": verdict,
+        "text": "",
+        "artifact_id": "memo",
+        "artifact_version": version,
+    }
+
+
+def test_reviewed_version_with_changes_requested_goes_to_the_writer() -> None:
+    state = make_state(
+        sources=[SOURCE], artifacts=[memo(4)], review_notes=[verdict_note(4, "changes_requested")]
+    )
+    result = enforce_invariants(state, "reviewer", GRAPH)
+    assert result.next_node == "coder"
+    assert [o.guard for o in result.overrides] == ["review_once_per_version"]
+
+
+def test_passed_version_goes_to_the_human_gate_not_back_to_review() -> None:
+    state = make_state(
+        sources=[SOURCE], artifacts=[memo(4)], review_notes=[verdict_note(4, "pass")]
+    )
+    assert enforce_invariants(state, "reviewer", GRAPH).next_node == "human_gate"
+
+
+def test_new_version_is_still_reviewed() -> None:
+    state = make_state(
+        sources=[SOURCE], artifacts=[memo(5)], review_notes=[verdict_note(4, "changes_requested")]
+    )
+    assert enforce_invariants(state, "reviewer", GRAPH).next_node == "reviewer"

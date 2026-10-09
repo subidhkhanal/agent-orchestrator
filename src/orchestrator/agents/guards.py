@@ -174,6 +174,37 @@ def guard_review_before_rewrite(state: RunState, proposed: str) -> GuardOverride
     )
 
 
+def guard_review_once_per_version(state: RunState, proposed: str) -> GuardOverride | None:
+    """A version that already has a verdict is not reviewed again.
+
+    Seen on a live run: the reviewer's notes said "pass" while its verdict on the same version
+    stayed "changes_requested", and the supervisor sent that version back to the reviewer until
+    the step cap. A second review of unchanged text cannot change the facts, so a reviewed
+    version moves on: to the writer if changes were requested, otherwise towards approval.
+    """
+    artifact = state.current_artifact()
+    if proposed != "reviewer" or artifact is None:
+        return None
+    verdict = state.latest_verdict(artifact)
+    if verdict is None:
+        return None
+    gated = (
+        state.hitl.artifact_id == artifact.id and state.hitl.artifact_version == artifact.version
+    )
+    if verdict.verdict == "pass" and not gated:
+        forced = "human_gate"
+    elif verdict.verdict == "pass" and publish_allowed(state):
+        forced = "publish"
+    else:
+        forced = "coder"
+    return GuardOverride(
+        "review_once_per_version",
+        proposed,
+        forced,
+        f"memo v{artifact.version} already has a '{verdict.verdict}' verdict",
+    )
+
+
 def guard_reviewer_requires_draft(state: RunState, proposed: str) -> GuardOverride | None:
     """There is nothing to review before the first draft (seen on a live run)."""
     if proposed != "reviewer" or state.current_artifact() is not None:
@@ -187,6 +218,7 @@ ROUTE_GUARDS: tuple[Callable[[RunState, str], GuardOverride | None], ...] = (
     guard_publish_requires_approval,
     guard_human_gate_requires_artifact,
     guard_reviewer_requires_draft,
+    guard_review_once_per_version,
     guard_coder_requires_sources,
     guard_review_before_rewrite,
 )
