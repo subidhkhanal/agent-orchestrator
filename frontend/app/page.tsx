@@ -309,7 +309,7 @@ export default function Home() {
         </>
       )}
       <footer className="muted">
-        Demo mode: small per-run and daily spend caps; publishing only writes to this app&apos;s own feed.
+        Demo mode: a per-run spend cap and a per-visitor rate limit; publishing only writes to this app&apos;s own feed.
       </footer>
     </main>
   );
