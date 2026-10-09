@@ -55,8 +55,8 @@ class Settings(BaseSettings):
     demo_tenant_id: str = "demo"
     demo_max_usd_per_run: float = 0.03
     demo_max_tokens_per_run: int = 100_000
-    daily_usd_cap: float = 1.00
-    # Free LLM tiers limit tokens per day, which binds long before the USD cap does.
-    daily_token_cap: int = 400_000
+    # Optional demo-wide caps per UTC day; unset means no daily cap (per-run caps still apply).
+    daily_usd_cap: float | None = None
+    daily_token_cap: int | None = None
     max_task_chars: int = 500
     rate_limit_runs_per_hour: int = 10

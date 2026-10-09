@@ -50,16 +50,12 @@ services:
         value: "true"
       - key: CORS_ORIGINS
         value: https://agent-orchestrator-opal.vercel.app
-      # Real money on Claude: hard caps per run and per day for the public demo. A measured
-      # run reached the approval gate for $0.24; a reject -> rewrite -> review cycle adds ~$0.12.
+      # Real money on Claude: a hard cap per run, plus the per-IP rate limit below. No daily
+      # total (owner's choice). A measured run with one rejection cost $0.20-0.35.
       - key: DEMO_MAX_USD_PER_RUN
         value: "1.50"
       - key: DEMO_MAX_TOKENS_PER_RUN    # includes cache reads (tool loops resend history)
         value: "600000"
-      - key: DAILY_USD_CAP
-        value: "4.00"
-      - key: DAILY_TOKEN_CAP
-        value: "8000000"
       - key: RATE_LIMIT_RUNS_PER_HOUR
         value: "10"
       - key: MAX_TASK_CHARS

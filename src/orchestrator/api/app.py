@@ -352,12 +352,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             client = request.client.host if request.client else "unknown"
             limiter.check(f"runs:{t.tenant_id}:{client}", s.rate_limit_runs_per_hour, 3600)
             today = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
-            reserved = await svc.runs.reserved_usd_since(today)
-            reserved_tokens = await svc.runs.reserved_tokens_since(today)
-            if (
-                reserved + body.budget.max_usd > s.daily_usd_cap
-                or reserved_tokens + body.budget.max_tokens > s.daily_token_cap
-            ):
+            over_usd = s.daily_usd_cap is not None and (
+                await svc.runs.reserved_usd_since(today) + body.budget.max_usd > s.daily_usd_cap
+            )
+            over_tokens = s.daily_token_cap is not None and (
+                await svc.runs.reserved_tokens_since(today) + body.budget.max_tokens
+                > s.daily_token_cap
+            )
+            if over_usd or over_tokens:
                 retry = int((today + timedelta(days=1) - datetime.now(UTC)).total_seconds())
                 raise ApiError(
                     503,

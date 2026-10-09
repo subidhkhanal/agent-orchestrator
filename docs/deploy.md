@@ -27,10 +27,10 @@ How the free tiers are handled:
 - Neon suspends after 5 minutes without queries and the free plan has 100 compute-hours a
   month; the worker is woken in-process instead of polling (`WORKER_POLL_S=900`), idle
   connections close after 60 s, and the SSE listener only connects while someone watches a run.
-- The Claude API is paid, so the demo has hard caps: $1.50 and 600k tokens per run, $4.00 and
-  8M tokens per day (new runs get 503 once reached), and 10 runs per hour per IP. Against the
-  daily cap, a run that can still spend counts its whole limit and a finished run counts what
-  it actually spent, so the cap bounds the worst case without idle reservations.
+- The Claude API is paid, so the demo has hard caps: $1.50 and 600k tokens per run, and 10 runs
+  per hour per IP. There is no demo-wide daily total (the owner's choice); one can be set with
+  `DAILY_USD_CAP` / `DAILY_TOKEN_CAP`. Against such a cap, a run that can still spend counts
+  its whole limit and a finished run counts what it actually spent.
 
 ## What changed from the original plan
 
@@ -79,7 +79,7 @@ Backend environment (never commit these):
 | `DEMO_MODE` | `true` |
 | `CORS_ORIGINS` | the Vercel URL |
 | `DEMO_MAX_USD_PER_RUN` | `1.50` (hard per-run cap; the demo tenant's allowance) |
-| `DAILY_USD_CAP` / `DAILY_TOKEN_CAP` | `4.00` / `8000000` (new runs get 503 once reached) |
+| `DAILY_USD_CAP` / `DAILY_TOKEN_CAP` | optional; unset on the live demo (when set, new runs get 503 once reached) |
 | `RATE_LIMIT_RUNS_PER_HOUR`, `MAX_TASK_CHARS` | `10`, `500` |
 
 Verify after deploying: `python scripts/e2e_smoke.py --api https://<backend>`; then check that a
